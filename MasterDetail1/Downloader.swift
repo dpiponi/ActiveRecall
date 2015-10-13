@@ -5,7 +5,9 @@
 
 import Foundation
 
+//
 // http://stackoverflow.com/questions/28219848/download-file-in-swift
+//
 class Downloader {
     class func load(filename:String, URL: NSURL) {
         let sessionConfig = NSURLSessionConfiguration.defaultSessionConfiguration()

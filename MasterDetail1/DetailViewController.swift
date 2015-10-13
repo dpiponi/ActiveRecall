@@ -167,10 +167,6 @@ class DetailViewController: UIViewController {
         }
     }
     
-//    override func canBecomeFirstResponder() -> Bool {
-//        return true
-//    }
-    
     func doShuffle() -> Void {
         self.withDeck {
             (deck) -> Void in
@@ -179,6 +175,11 @@ class DetailViewController: UIViewController {
             self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
         }
     }
+    
+//    override func canBecomeFirstResponder() -> Bool {
+//        return true
+//    }
+
 
 //    // http://stackoverflow.com/questions/27681887/how-to-fix-run-time-error-using-uialertcontroller
 //    override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {

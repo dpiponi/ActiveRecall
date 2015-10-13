@@ -23,8 +23,7 @@ class PDFView : UIView {
     }
     
     var pageNumber:Int = 0 {
-        didSet {
-        
+        didSet {        
             let document = CGPDFDocumentCreateWithURL(url)
             
             self.backColor = (self.backgroundColor?.CGColor)!
@@ -46,11 +45,6 @@ class PDFView : UIView {
     override func drawRect(rect: CGRect) {
         
         let context = UIGraphicsGetCurrentContext()
-        //        CGContextScaleCTM(context, 0.6, 0.6)
-        
-        //        CGContextMoveToPoint(context, 0, 0)
-        //        CGContextAddLineToPoint(context, self.bounds.size.width, 0)
-        //        CGContextStrokePath(context)
         let document = CGPDFDocumentCreateWithURL(url)
         let page = CGPDFDocumentGetPage(document, pageNumber)
         let pageRect = CGPDFPageGetBoxRect(page, .MediaBox)
@@ -60,7 +54,6 @@ class PDFView : UIView {
         
         CGContextSetFillColorWithColor(context, UIColor.clearColor().CGColor)
         CGContextFillRect(context,pageRect)
-
         
         CGContextTranslateCTM(context, frame.size.width/2, frame.size.height/2)
         CGContextScaleCTM(context, scale, scale)
