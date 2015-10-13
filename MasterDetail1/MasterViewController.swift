@@ -13,7 +13,7 @@ import UIKit
 
 class MasterViewController: UITableViewController {
 
-    var detailViewController: DetailViewController? = nil
+    var detailViewController: SlideDeckController? = nil
     var slideRootDirs = [NSURL]()
 
 
@@ -23,6 +23,7 @@ class MasterViewController: UITableViewController {
             self.clearsSelectionOnViewWillAppear = false
             self.preferredContentSize = CGSize(width: 320.0, height: 600.0)
         }
+//        self.title = "Slide Decks"
     }
 
     override func viewDidLoad() {
@@ -32,7 +33,7 @@ class MasterViewController: UITableViewController {
         
         if let split = self.splitViewController {
             let controllers = split.viewControllers
-            self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
+            self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? SlideDeckController
         }
         
         // Set up list of slide decks by enumerating contents
@@ -92,7 +93,7 @@ class MasterViewController: UITableViewController {
         if segue.identifier == "showDetail" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let slideRootDir = slideRootDirs[indexPath.row]
-                let detailController = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
+                let detailController = (segue.destinationViewController as! UINavigationController).topViewController as! SlideDeckController
                 detailController.slideRootDir = slideRootDir
                 detailController.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
 

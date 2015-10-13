@@ -7,6 +7,7 @@ TODO
 23. Rename classes internally
 28. Examples
 32. Start in master? See http://stackoverflow.com/questions/25875618/uisplitviewcontroller-in-portrait-on-iphone-shows-detail-vc-instead-of-master
+34. Maybe cache thumbnails
 
 DONE
 ====
@@ -40,3 +41,4 @@ DONE
 20. Move card to back or from back (from back implemented only as undoing swipe to back)
 33. Right swipe empty detail crashes.
 27. Documentation slide deck
+35. Detail "back" button to say "Slide Decks"

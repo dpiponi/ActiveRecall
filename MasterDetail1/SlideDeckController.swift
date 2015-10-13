@@ -9,7 +9,7 @@
 import UIKit
 
 
-class DetailViewController: UIViewController {
+class SlideDeckController : UIViewController {
 
     @IBOutlet weak var pdfView: PDFView!
     var displayingFront : Bool = true

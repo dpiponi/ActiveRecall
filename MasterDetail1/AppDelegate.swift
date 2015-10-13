@@ -22,7 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         splitViewController.presentsWithGesture = true
         let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
 
-        navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
+        let barButton = splitViewController.displayModeButtonItem()
+//        barButton.title = "Slide Decks"
+        navigationController.topViewController!.navigationItem.leftBarButtonItem = barButton
         splitViewController.delegate = self
         
 //        let documentsDirectory = NSFileManager.defaultManager().URLsForDirectory(
@@ -33,6 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
        
         let navController = splitViewController.viewControllers[0] as! UINavigationController
         slideListController = navController.topViewController as! MasterViewController
+        slideListController.title = "Slide Decks"
         
         // Set up documentation?
         let path = NSBundle.mainBundle().pathForResource("ActiveRecall", ofType:"pdf")
@@ -64,7 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController, ontoPrimaryViewController primaryViewController:UIViewController) -> Bool {
         if let secondaryAsNavController = secondaryViewController as? UINavigationController {
-            if let topAsDetailController = secondaryAsNavController.topViewController as? DetailViewController {
+            if let topAsDetailController = secondaryAsNavController.topViewController as? SlideDeckController {
                 if topAsDetailController.slideRootDir == nil {
                     // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
                     return true

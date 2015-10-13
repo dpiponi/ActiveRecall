@@ -14,7 +14,7 @@
 		BDAA55491BC71D53002F24CD /* PDFBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAA55481BC71D53002F24CD /* PDFBorder.swift */; };
 		BDCD6D9B1BBE189C009A1FF9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCD6D9A1BBE189C009A1FF9 /* AppDelegate.swift */; };
 		BDCD6D9D1BBE189C009A1FF9 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCD6D9C1BBE189C009A1FF9 /* MasterViewController.swift */; };
-		BDCD6D9F1BBE189C009A1FF9 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCD6D9E1BBE189C009A1FF9 /* DetailViewController.swift */; };
+		BDCD6D9F1BBE189C009A1FF9 /* SlideDeckController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCD6D9E1BBE189C009A1FF9 /* SlideDeckController.swift */; };
 		BDCD6DA21BBE189C009A1FF9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDCD6DA01BBE189C009A1FF9 /* Main.storyboard */; };
 		BDCD6DA41BBE189C009A1FF9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDCD6DA31BBE189C009A1FF9 /* Images.xcassets */; };
 		BDCD6DA71BBE189C009A1FF9 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDCD6DA51BBE189C009A1FF9 /* LaunchScreen.xib */; };
@@ -42,7 +42,7 @@
 		BDCD6D991BBE189C009A1FF9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDCD6D9A1BBE189C009A1FF9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BDCD6D9C1BBE189C009A1FF9 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
-		BDCD6D9E1BBE189C009A1FF9 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		BDCD6D9E1BBE189C009A1FF9 /* SlideDeckController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideDeckController.swift; sourceTree = "<group>"; };
 		BDCD6DA11BBE189C009A1FF9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BDCD6DA31BBE189C009A1FF9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		BDCD6DA61BBE189C009A1FF9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -95,7 +95,7 @@
 				BD3A1D241BC42A2E00E40A00 /* TODO.txt */,
 				BDCD6D9A1BBE189C009A1FF9 /* AppDelegate.swift */,
 				BDCD6D9C1BBE189C009A1FF9 /* MasterViewController.swift */,
-				BDCD6D9E1BBE189C009A1FF9 /* DetailViewController.swift */,
+				BDCD6D9E1BBE189C009A1FF9 /* SlideDeckController.swift */,
 				BD3A1D221BC38DAD00E40A00 /* Deck.swift */,
 				37BD82851BC05E4E00E6108A /* Downloader.swift */,
 				BDAA55481BC71D53002F24CD /* PDFBorder.swift */,
@@ -241,7 +241,7 @@
 				BD3A1D231BC38DAD00E40A00 /* Deck.swift in Sources */,
 				37BD82861BC05E4E00E6108A /* Downloader.swift in Sources */,
 				BDAA55491BC71D53002F24CD /* PDFBorder.swift in Sources */,
-				BDCD6D9F1BBE189C009A1FF9 /* DetailViewController.swift in Sources */,
+				BDCD6D9F1BBE189C009A1FF9 /* SlideDeckController.swift in Sources */,
 				BDCD6DBD1BBED9C3009A1FF9 /* PDFView.swift in Sources */,
 				BDCD6D9D1BBE189C009A1FF9 /* MasterViewController.swift in Sources */,
 				BDCD6D9B1BBE189C009A1FF9 /* AppDelegate.swift in Sources */,
