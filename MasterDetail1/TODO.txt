@@ -1,0 +1,40 @@
+TODO
+====
+2. Renaming of slide decks
+16. Delete card (watch out for decks with no cards!)
+18. Consider caching border colours
+20. Move card to back orfrom back
+21. Some animation
+23. Rename classes internally
+27. Documentation slide deck
+28. Examples
+
+DONE
+====
+3. Move all decks to a subdirectory of Documents, not Documents itself.
+4. Persistence. Need to scan list of decks at startup.
+1. Handle opening a PDF with same name as existing PDF
+(Basically this should update deck)
+3. Deletion of decks
+6. Appropriately scale and centre slides
+5. Deal with 6 plus/6s plus master detail
+8. Title above slides should be name of deck
+11. Splash screen
+7. Remove + button from master
+9. Deal with "Open in..." when app not yet running
+10. Rename app
+12. Icons
+4. Version numbering of deck save format
+15. Confirm shuffle
+3. Undo
+17. Speed up computation of average border colour
+19. Limit undo levels, maybe to something like 20.
+13. Thumbnail in slide deck list
+22. Make alerts work on iPad
+24. Fixed mysterious crash. (Incorrectly filtered cardIndices when deck size grown.)
+26. Do some testing with growing and shrinking decks
+29. Handle deletion of currently visible slide deck
+25. Display size of deck in list
+30. Handle update of table view when opening new version of slide deck with changed size
+31. Top right button in detail navbar
+14. Options
