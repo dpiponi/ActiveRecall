@@ -34,6 +34,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let navController = splitViewController.viewControllers[0] as! UINavigationController
         slideListController = navController.topViewController as! MasterViewController
         
+        // Set up documentation?
+        let path = NSBundle.mainBundle().pathForResource("ActiveRecall", ofType:"pdf")
+        print("path=", path)
+        let url = NSURL.fileURLWithPath(path!)
+        setUpSlideDeck(openURL: url, moving:false, addingToList:false)
+        
         return true
     }
     
@@ -68,21 +74,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         return false
     }
 
-    // This is what's done when "Open in..." dialogue is completed.
-    func application(application: UIApplication, openURL url: NSURL,
-                     sourceApplication: String?, annotation: AnyObject)-> Bool {
-
+    func setUpSlideDeck(openURL url: NSURL, moving: Bool, addingToList: Bool) {
         let filemgr = NSFileManager.defaultManager()
         let documentsDirectory = filemgr.URLsForDirectory(
-                                    NSSearchPathDirectory.DocumentDirectory,
-                                    inDomains: NSSearchPathDomainMask.UserDomainMask)[0]
-            
-            
+            NSSearchPathDirectory.DocumentDirectory,
+            inDomains: NSSearchPathDomainMask.UserDomainMask)[0]
+        
+        
         let destDir : NSURL = documentsDirectory.URLByAppendingPathComponent("Decks")
-                                                .URLByAppendingPathComponent(url.lastPathComponent!)
-                                                .URLByDeletingPathExtension!
-            
-
+            .URLByAppendingPathComponent(url.lastPathComponent!)
+            .URLByDeletingPathExtension!
+        
+        
         var updatingDeck : Bool = false
         // Create that directory
         if (filemgr.fileExistsAtPath(destDir.path!)) {
@@ -96,10 +99,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                 // It must already exist
                 print("Already exists!")
                 updatingDeck = true
-//                return true
+                //                return true
             }
         }
-            
+        
         // Get path of slides within that directory
         let pdfPath = destDir.URLByAppendingPathComponent("slides.pdf")
         
@@ -113,15 +116,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // Move slides from Inbox to new destination
         do {
             //
-            try filemgr.moveItemAtURL(url, toURL:pdfPath)
-            
-            let masterController = slideListController
-            
-            // Tell master controller about root directory for card deck
-            if !updatingDeck {
-                masterController.insertNewSlides(destDir)
+            if moving {
+                try filemgr.moveItemAtURL(url, toURL:pdfPath)
             } else {
-                masterController.reload()
+                try filemgr.copyItemAtURL(url, toURL:pdfPath)
+            }
+            
+            if addingToList {
+                let masterController = slideListController
+                
+                // Tell master controller about root directory for card deck
+                if !updatingDeck {
+                    masterController.insertNewSlides(destDir)
+                } else {
+                    masterController.reload()
+                }
             }
         } catch {
             print("Failed")
@@ -141,20 +150,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let pdfDocument = CGPDFDocumentCreateWithURL(pdfPath)
         let numPages : Int = CGPDFDocumentGetNumberOfPages(pdfDocument)
         let numCards = numPages/2
-                        
+        
         if updatingDeck {
             let destCards = destDir.URLByAppendingPathComponent("deck.dat")
             let deck = NSKeyedUnarchiver.unarchiveObjectWithFile(destCards.path!) as! Deck
             deck.resize(numCards)
             NSKeyedArchiver.archiveRootObject(deck, toFile: destCards.path!)
-            return true
         } else {
             let deck : Deck = Deck(numCards: numCards, initCardLevel: 8)
             deck.start()
             let destCards = destDir.URLByAppendingPathComponent("deck.dat")
             NSKeyedArchiver.archiveRootObject(deck, toFile: destCards.path!)
-            return true
         }
+        
+    }
+    
+    // This is what's done when "Open in..." dialogue is completed.
+    func application(application: UIApplication, openURL url: NSURL,
+                     sourceApplication: String?, annotation: AnyObject)-> Bool {
+                        setUpSlideDeck(openURL: url, moving: true, addingToList:true)
+                        
+        return true
             
     }
     

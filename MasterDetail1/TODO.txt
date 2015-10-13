@@ -5,7 +5,6 @@ TODO
 18. Consider caching border colours
 21. Some animation
 23. Rename classes internally
-27. Documentation slide deck
 28. Examples
 32. Start in master? See http://stackoverflow.com/questions/25875618/uisplitviewcontroller-in-portrait-on-iphone-shows-detail-vc-instead-of-master
 
@@ -40,3 +39,4 @@ DONE
 14. Options
 20. Move card to back or from back (from back implemented only as undoing swipe to back)
 33. Right swipe empty detail crashes.
+27. Documentation slide deck
