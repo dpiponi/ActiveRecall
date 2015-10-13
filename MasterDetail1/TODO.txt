@@ -8,7 +8,6 @@ TODO
 27. Documentation slide deck
 28. Examples
 32. Start in master? See http://stackoverflow.com/questions/25875618/uisplitviewcontroller-in-portrait-on-iphone-shows-detail-vc-instead-of-master
-33. Right swipe empty detail crashes.
 
 DONE
 ====
@@ -40,3 +39,4 @@ DONE
 31. Top right button in detail navbar
 14. Options
 20. Move card to back or from back (from back implemented only as undoing swipe to back)
+33. Right swipe empty detail crashes.

@@ -53,13 +53,15 @@ class DetailViewController: UIViewController {
     }
     
     func withDeck(f : (Deck -> Void)) {
-        let deckURL : NSURL = slideRootDir!.URLByAppendingPathComponent("deck.dat")
-        if NSFileManager.defaultManager().fileExistsAtPath(deckURL.path!) {
-            // Read in Deck
-            let deck = NSKeyedUnarchiver.unarchiveObjectWithFile(deckURL.path!) as! Deck
-            f(deck)
-            // Write deck back out again
-            NSKeyedArchiver.archiveRootObject(deck, toFile: deckURL.path!)
+        if slideRootDir != nil {
+            let deckURL : NSURL = slideRootDir!.URLByAppendingPathComponent("deck.dat")
+            if NSFileManager.defaultManager().fileExistsAtPath(deckURL.path!) {
+                // Read in Deck
+                let deck = NSKeyedUnarchiver.unarchiveObjectWithFile(deckURL.path!) as! Deck
+                f(deck)
+                // Write deck back out again
+                NSKeyedArchiver.archiveRootObject(deck, toFile: deckURL.path!)
+            }
         }
     }
 
@@ -132,6 +134,7 @@ class DetailViewController: UIViewController {
         withDeck {
             (deck) -> Void in
             deck.undo()
+            self.displayingFront = true
             self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
         }
     }
@@ -140,6 +143,7 @@ class DetailViewController: UIViewController {
         withDeck {
             (deck) -> Void in
             deck.reset()
+            self.displayingFront = true
             self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
         }
     }
@@ -156,6 +160,7 @@ class DetailViewController: UIViewController {
         withDeck {
             (deck) -> Void in
             deck.undo()
+            self.displayingFront = true
             self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
         }
     }
@@ -163,6 +168,7 @@ class DetailViewController: UIViewController {
         withDeck {
             (deck) -> Void in
             deck.moveFrontToBack()
+            self.displayingFront = true
             self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
         }
     }

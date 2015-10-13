@@ -25,11 +25,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
         splitViewController.delegate = self
         
-        let documentsDirectory = NSFileManager.defaultManager().URLsForDirectory(
-            NSSearchPathDirectory.DocumentDirectory,
-            inDomains: NSSearchPathDomainMask.UserDomainMask)[0]
-        
-        let destDir : NSURL = documentsDirectory.URLByAppendingPathComponent("Decks")
+//        let documentsDirectory = NSFileManager.defaultManager().URLsForDirectory(
+//            NSSearchPathDirectory.DocumentDirectory,
+//            inDomains: NSSearchPathDomainMask.UserDomainMask)[0]
+//        
+//        let destDir : NSURL = documentsDirectory.URLByAppendingPathComponent("Decks")
        
         let navController = splitViewController.viewControllers[0] as! UINavigationController
         slideListController = navController.topViewController as! MasterViewController

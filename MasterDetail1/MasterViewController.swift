@@ -8,6 +8,9 @@
 
 import UIKit
 
+// Will need...
+// http://stackoverflow.com/questions/9509993/make-only-certain-sections-of-uitableview-editable
+
 class MasterViewController: UITableViewController {
 
     var detailViewController: DetailViewController? = nil
