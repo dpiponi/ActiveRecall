@@ -8,6 +8,7 @@ TODO
 27. Documentation slide deck
 28. Examples
 32. Start in master? See http://stackoverflow.com/questions/25875618/uisplitviewcontroller-in-portrait-on-iphone-shows-detail-vc-instead-of-master
+33. Right swipe empty detail crashes.
 
 DONE
 ====
