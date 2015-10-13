@@ -84,13 +84,7 @@ class DetailViewController: UIViewController {
                 self.doShuffle() // YYY
             }
             alertController.addAction(OKAction)
-            
-            let OKAction3 = UIAlertAction(title: "Undo", style: .Default) { (_) in
-                print("Undo")
-                self.doUndo()
-            }
-            alertController.addAction(OKAction3)
-            
+                        
             let OKAction4 = UIAlertAction(title: "Reverse", style: .Default) { (_) in
                 print("Reverse")
                 self.doReverse()
@@ -176,14 +170,14 @@ class DetailViewController: UIViewController {
     @IBAction func swipeRightHandler(sender: AnyObject) {
         print("swipe right")
         withDeck({(deck) -> Void in
-            deck.undo()
+            deck.moveFrontToBack()
             self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
         })
     }
     
-    override func canBecomeFirstResponder() -> Bool {
-        return true
-    }
+//    override func canBecomeFirstResponder() -> Bool {
+//        return true
+//    }
     
     func doShuffle() -> Void {
         self.withDeck({(deck) -> Void in
@@ -193,38 +187,38 @@ class DetailViewController: UIViewController {
         })
     }
 
-    // http://stackoverflow.com/questions/27681887/how-to-fix-run-time-error-using-uialertcontroller
-    override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
-        if motion == .MotionShake {
-            
-            
-            let window = UIApplication.sharedApplication().keyWindow
-            if window?.rootViewController?.presentedViewController == nil {
-                let alertController = UIAlertController(title: "Shake", message: "Do you wish to shuffle deck?", preferredStyle: .ActionSheet)
-                
-                let OKAction = UIAlertAction(title: "Yes", style: .Default) { (_) in
-                        self.withDeck({(deck) -> Void in
-                                deck.shuffle()
-                                self.displayingFront = true
-                                self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
-                        })}
-                alertController.addAction(OKAction)
-                let OKAction2 = UIAlertAction(title: "No", style: .Default) { (action) in print("ok") }
-                alertController.addAction(OKAction2)
-
-                if let controller = alertController.popoverPresentationController {
-                    controller.sourceView = self.view;
-                    controller.sourceRect = CGRectMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.0, 1.0, 1.0);
-                }
-                
-                window?.rootViewController?.presentViewController(alertController, animated: true) {
-                    print("what?")
-                }
-            }
-
-            
-        }
-    }
+//    // http://stackoverflow.com/questions/27681887/how-to-fix-run-time-error-using-uialertcontroller
+//    override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
+//        if motion == .MotionShake {
+//            
+//            
+//            let window = UIApplication.sharedApplication().keyWindow
+//            if window?.rootViewController?.presentedViewController == nil {
+//                let alertController = UIAlertController(title: "Shake", message: "Do you wish to shuffle deck?", preferredStyle: .ActionSheet)
+//                
+//                let OKAction = UIAlertAction(title: "Yes", style: .Default) { (_) in
+//                        self.withDeck({(deck) -> Void in
+//                                deck.shuffle()
+//                                self.displayingFront = true
+//                                self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
+//                        })}
+//                alertController.addAction(OKAction)
+//                let OKAction2 = UIAlertAction(title: "No", style: .Default) { (action) in print("ok") }
+//                alertController.addAction(OKAction2)
+//
+//                if let controller = alertController.popoverPresentationController {
+//                    controller.sourceView = self.view;
+//                    controller.sourceRect = CGRectMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.0, 1.0, 1.0);
+//                }
+//                
+//                window?.rootViewController?.presentViewController(alertController, animated: true) {
+//                    print("what?")
+//                }
+//            }
+//
+//            
+//        }
+//    }
 
 }
 

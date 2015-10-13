@@ -52,6 +52,7 @@
                                     <outletCollection property="gestureRecognizers" destination="Xb4-UY-cXc" appends="YES" id="dlj-a1-Lew"/>
                                     <outletCollection property="gestureRecognizers" destination="kw1-ug-8Hb" appends="YES" id="tYg-ce-pl0"/>
                                     <outletCollection property="gestureRecognizers" destination="nan-sr-rN0" appends="YES" id="OXP-RM-J2d"/>
+                                    <outletCollection property="gestureRecognizers" destination="5si-7x-ia7" appends="YES" id="ScK-ak-v16"/>
                                 </connections>
                             </view>
                         </subviews>
@@ -87,9 +88,9 @@
                         <action selector="swipeRightHandler:" destination="JEX-9P-axG" id="4n1-Rh-wLn"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <swipeGestureRecognizer direction="left" id="W18-c6-jEB">
+                <swipeGestureRecognizer direction="left" id="5si-7x-ia7">
                     <connections>
-                        <action selector="swipeLeftHandler:" destination="JEX-9P-axG" id="FiD-nF-j8d"/>
+                        <action selector="swipeLeftHandler:" destination="JEX-9P-axG" id="szD-c5-pBc"/>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>

@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         let splitViewController = self.window!.rootViewController as! UISplitViewController
-//        splitViewController.presentsWithGesture = true
+        splitViewController.presentsWithGesture = true
         let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
 
         navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
@@ -30,10 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             inDomains: NSSearchPathDomainMask.UserDomainMask)[0]
         
         let destDir : NSURL = documentsDirectory.URLByAppendingPathComponent("Decks")
-
-        print("destDir =", destDir)
-        
-        
+       
         let navController = splitViewController.viewControllers[0] as! UINavigationController
         slideListController = navController.topViewController as! MasterViewController
         

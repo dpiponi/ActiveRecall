@@ -3,11 +3,11 @@ TODO
 2. Renaming of slide decks
 16. Delete card (watch out for decks with no cards!)
 18. Consider caching border colours
-20. Move card to back orfrom back
 21. Some animation
 23. Rename classes internally
 27. Documentation slide deck
 28. Examples
+32. Start in master? See http://stackoverflow.com/questions/25875618/uisplitviewcontroller-in-portrait-on-iphone-shows-detail-vc-instead-of-master
 
 DONE
 ====
@@ -38,3 +38,4 @@ DONE
 30. Handle update of table view when opening new version of slide deck with changed size
 31. Top right button in detail navbar
 14. Options
+20. Move card to back or from back (from back implemented only as undoing swipe to back)
