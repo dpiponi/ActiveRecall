@@ -19,7 +19,6 @@ class PDFView : UIView {
         }
     }
     override func layoutSubviews() {
-        print("Hello", bounds)
         setNeedsDisplay()
     }
     
@@ -29,8 +28,6 @@ class PDFView : UIView {
             let document = CGPDFDocumentCreateWithURL(url)
             
             self.backColor = (self.backgroundColor?.CGColor)!
-//            self.backColor = UIColor.whiteColor().CGColor
-//            self.backgroundColor = UIColor.whiteColor()
             self.backgroundColor = PDFBorder(document!, pageNumber: pageNumber)
             setNeedsDisplay()
         }
@@ -41,7 +38,6 @@ class PDFView : UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        print("CONSTRUCTING PDFVIEW!!!")
         super.init(coder:aDecoder)
         self.backgroundColor = UIColor.clearColor()
         self.backColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0).CGColor
@@ -56,7 +52,6 @@ class PDFView : UIView {
         //        CGContextAddLineToPoint(context, self.bounds.size.width, 0)
         //        CGContextStrokePath(context)
         let document = CGPDFDocumentCreateWithURL(url)
-        print("document=",document,"pageNum=",pageNumber,"out ot", CGPDFDocumentGetNumberOfPages(document))
         let page = CGPDFDocumentGetPage(document, pageNumber)
         let pageRect = CGPDFPageGetBoxRect(page, .MediaBox)
         let scalew = frame.size.width/pageRect.size.width
@@ -72,17 +67,6 @@ class PDFView : UIView {
         CGContextScaleCTM(context, 1.0, -1.0)
         CGContextTranslateCTM(context, -pageRect.size.width/2, -pageRect.size.height/2)
         CGContextDrawPDFPage(context, page)
-        
-        
-///////////////////
-        
-//        CGImageRef image = uiimage.CGImage;
-        
-        ///////////////////
-        
-        
-//        let retval : UIImage? = UIGraphicsGetImageFromCurrentImageContext()
-//        print("retval=",retval)
         
     }
 }

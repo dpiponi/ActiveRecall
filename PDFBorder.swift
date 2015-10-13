@@ -55,10 +55,7 @@ func makeThumbnail(pdfFile: NSURL) -> UIImage {
 func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     let downScale : Int = 4
     let page = CGPDFDocumentGetPage(document, pageNumber)
-    //        let t : CGPDFBox = .MediaBox
     let pageRect = CGPDFPageGetBoxRect(page, .MediaBox)
-    print("pageNumber=", pageNumber)
-    print("pageRect=",pageRect)
     let width = pageRect.size.width;
     let height = pageRect.size.height;
     let iwidth = Int(width)/downScale
@@ -71,9 +68,7 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     let bytesPerRow : Int = bytesPerPixel*iwidth
     let bitsPerComponent : Int = 8
     let bitmapData = malloc(Int(bytesPerPixel*iwidth*iheight))
-    print("bitmapData =", bitmapData)
-    print("size=", iwidth, iheight)
-    //            let bitmapData = UnsafePointer<UInt8>.alloc(Int(4))
+    
     // https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CGBitmapContext/#//apple_ref/swift/tdef/c:@T@CGBitmapContextReleaseDataCallback
     let maybeContext2 : CGContextRef? = CGBitmapContextCreateWithData(bitmapData,
         iwidth,
@@ -97,7 +92,6 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     CGContextTranslateCTM(context2, 0.5*CGFloat(iwidth), 0.5*CGFloat(iheight))
     //            CGContextScaleCTM(context, scale, scale)
     CGContextScaleCTM(context2, 1.0/CGFloat(downScale), -1.0/CGFloat(downScale))
-    print("width=",width)
     CGContextTranslateCTM(context2, -0.5*width-xoffset, -0.5*height+yoffset)
 
     let bdat = UnsafeMutablePointer<UInt8>(bitmapData)
@@ -105,7 +99,6 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     bdat[1] = 255
     bdat[2] = 255
     bdat[3] = 255
-    print("1.",bdat[0], bdat[1], bdat[2], bdat[3])
 
     CGContextDrawPDFPage(context2, page)
     var tr : CGFloat = 0.0
@@ -147,30 +140,14 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     tr /= CGFloat(count)
     tg /= CGFloat(count)
     tb /= CGFloat(count)
-    print("t", tr, tg, tb)
     for i in 0..<(iwidth*iheight*bytesPerPixel) {
         bdat[i] = 255
         if i & 3 == 3 {
             bdat[i] = 0
         }
     }
-    print("2.",bdat[0], bdat[1], bdat[2], bdat[3])
-    //        CGContextDrawImage(context,
-    //            CGRectMake(-offsetx, offsety-height, width, height),
-    //            image);
-
-    // Done
-    //        CGContextRelease(context);
-
-    // Get the pixel information
-    //        unsigned char red   = rawData[0]
-    //        unsigned char green = rawData[1]
-    //        unsigned char blue  = rawData[2]
-    //        unsigned char alpha = rawData[3]
-    print("3.",bdat[0], bdat[1], bdat[2], bdat[3])
     
     CGContextRestoreGState(context2);
-//    CGContextRelease(context2)
     
     // http://stackoverflow.com/questions/9444295/ios-does-cgbitmapcontextcreate-copy-data
 //    free(bitmapData)

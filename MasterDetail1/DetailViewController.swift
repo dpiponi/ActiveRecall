@@ -17,7 +17,6 @@ class DetailViewController: UIViewController {
     
     func pageNumberFromDeck(deck : Deck)  -> Int {
         let n = 1+2*deck.cardIndices[0]+(self.displayingFront == self.shouldDisplayFront ? 0 : 1)
-        print("n=", n)
         return n
     }
 
@@ -54,7 +53,6 @@ class DetailViewController: UIViewController {
     }
     
     func withDeck(f : (Deck -> Void)) {
-        print("sliderootdir=", slideRootDir)
         let deckURL : NSURL = slideRootDir!.URLByAppendingPathComponent("deck.dat")
         if NSFileManager.defaultManager().fileExistsAtPath(deckURL.path!) {
             // Read in Deck
@@ -67,34 +65,28 @@ class DetailViewController: UIViewController {
 
     
     @IBAction func doOptions(sender: UIBarButtonItem) {
-        print("SENDER =", sender)
         let window = UIApplication.sharedApplication().keyWindow
         if window?.rootViewController?.presentedViewController == nil {
             let alertController = UIAlertController(title: "Deck Options", message: "What do you want to do?", preferredStyle: .ActionSheet)
             
             
             let OKAction2 = UIAlertAction(title: "Reset", style: .Default) { (_) in
-                print("reset")
                 self.doReset()
             }
             alertController.addAction(OKAction2)
             
             let OKAction = UIAlertAction(title: "Shuffle", style: .Default) { (_) in
-                print("Shuffle")
                 self.doShuffle() // YYY
             }
             alertController.addAction(OKAction)
                         
             let OKAction4 = UIAlertAction(title: "Reverse", style: .Default) { (_) in
-                print("Reverse")
                 self.doReverse()
             }
             alertController.addAction(OKAction4)
             
             if let controller = alertController.popoverPresentationController {
                 controller.barButtonItem = sender
-                //                controller.sourceView = self.view;
-                //                controller.sourceRect = CGRectMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.0, 1.0, 1.0);
             }
             
             window?.rootViewController?.presentViewController(alertController, animated: false) {
@@ -110,7 +102,8 @@ class DetailViewController: UIViewController {
     @IBAction func tapHandler(recognizer:UITapGestureRecognizer) {
         guard slideRootDir != nil else { return }
   
-        withDeck({(deck) -> Void in
+        withDeck {
+            (deck) -> Void in
             let loc = recognizer.locationInView(self.pdfView)
             let slideWidth : CGFloat = self.pdfView.frame.size.width
             if loc.x > 2*slideWidth/3 {
@@ -122,16 +115,12 @@ class DetailViewController: UIViewController {
             } else {
                 self.displayingFront = !self.displayingFront
             }
-            print("cardIndices[0] =", deck.cardIndices[0])
-            print("# cardIndices =", deck.cardIndices.count)
-            print("# cardLevels =", deck.cardLevels.count)
             self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
-        })
+        }
         
     }
     
     @IBAction func pinchHandler(sender: UIPinchGestureRecognizer) {
-        print("Pinch")
         if sender.scale > 1 {
             pdfView.zoomed = true
         } else if sender.scale < 1 {
@@ -140,39 +129,42 @@ class DetailViewController: UIViewController {
     }
 
     func doUndo() -> Void {
-        withDeck {(deck) -> Void in
+        withDeck {
+            (deck) -> Void in
             deck.undo()
             self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
         }
     }
     
     func doReset() -> Void {
-        withDeck {(deck) -> Void in
+        withDeck {
+            (deck) -> Void in
             deck.reset()
             self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
         }
     }
     
     func doReverse() -> Void {
-        withDeck {(deck) -> Void in
+        withDeck {
+            (deck) -> Void in
             self.shouldDisplayFront = !self.shouldDisplayFront
             self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
         }
     }
     
     @IBAction func swipeLeftHandler(sender: AnyObject) {
-        print("swipe left")
-        withDeck({(deck) -> Void in
+        withDeck {
+            (deck) -> Void in
             deck.undo()
             self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
-        })
+        }
     }
     @IBAction func swipeRightHandler(sender: AnyObject) {
-        print("swipe right")
-        withDeck({(deck) -> Void in
+        withDeck {
+            (deck) -> Void in
             deck.moveFrontToBack()
             self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
-        })
+        }
     }
     
 //    override func canBecomeFirstResponder() -> Bool {
@@ -180,11 +172,12 @@ class DetailViewController: UIViewController {
 //    }
     
     func doShuffle() -> Void {
-        self.withDeck({(deck) -> Void in
+        self.withDeck {
+            (deck) -> Void in
             deck.shuffle()
             self.displayingFront = true
             self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
-        })
+        }
     }
 
 //    // http://stackoverflow.com/questions/27681887/how-to-fix-run-time-error-using-uialertcontroller

@@ -94,7 +94,6 @@ class Deck : NSObject, NSCoding {
         let currentCard : Int = cardIndices.removeAtIndex(0)
         
         let newIndex : Int = numCards-1
-        print("newIndex=", newIndex)
         cardIndices.insert(currentCard, atIndex: newIndex)
         history.insert(newIndex, atIndex: 0)
         levelHistory.insert(cardLevels[currentCard], atIndex: 0)
@@ -104,7 +103,6 @@ class Deck : NSObject, NSCoding {
         let currentCard : Int = cardIndices.removeAtIndex(0)
         
         let newIndex : Int = min(cardLevels[currentCard], numCards-1)
-        print("newIndex=", newIndex)
         cardIndices.insert(currentCard, atIndex: newIndex)
         history.insert(newIndex, atIndex: 0)
 

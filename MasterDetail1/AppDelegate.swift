@@ -82,12 +82,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                                                 .URLByAppendingPathComponent(url.lastPathComponent!)
                                                 .URLByDeletingPathExtension!
             
-        print("destdir =", destDir)
 
         var updatingDeck : Bool = false
         // Create that directory
         if (filemgr.fileExistsAtPath(destDir.path!)) {
-            print("Already exists", destDir)
             updatingDeck = true
         } else {
             print("Doesnt exist", destDir)
@@ -105,11 +103,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // Get path of slides within that directory
         let pdfPath = destDir.URLByAppendingPathComponent("slides.pdf")
         
-        print("updatingDeck=",updatingDeck)
         if updatingDeck {
             do {
                 try filemgr.removeItemAtURL(pdfPath)
-                print("Removed item from", pdfPath)
             } catch {
                 print("Couldn't remove item from", pdfPath)
             }
@@ -117,16 +113,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // Move slides from Inbox to new destination
         do {
             //
-            print("Moving from", url, "to", pdfPath)
             try filemgr.moveItemAtURL(url, toURL:pdfPath)
-            print("Success")
-//            let splitViewController = self.window!.rootViewController as! UISplitViewController
             
-//            let navController = splitViewController.viewControllers[0] as! UINavigationController
-//            let masterController = navController.topViewController as! MasterViewController
             let masterController = slideListController
-            
-            print("top=",masterController)
             
             // Tell master controller about root directory for card deck
             if !updatingDeck {
@@ -158,14 +147,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             let deck = NSKeyedUnarchiver.unarchiveObjectWithFile(destCards.path!) as! Deck
             deck.resize(numCards)
             NSKeyedArchiver.archiveRootObject(deck, toFile: destCards.path!)
-            //        print("pdfPath=", pdfPath)
             return true
         } else {
             let deck : Deck = Deck(numCards: numCards, initCardLevel: 8)
             deck.start()
             let destCards = destDir.URLByAppendingPathComponent("deck.dat")
             NSKeyedArchiver.archiveRootObject(deck, toFile: destCards.path!)
-    //        print("pdfPath=", pdfPath)
             return true
         }
             

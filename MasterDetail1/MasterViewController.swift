@@ -26,9 +26,6 @@ class MasterViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
-
-//        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
-//        self.navigationItem.rightBarButtonItem = addButton
         
         if let split = self.splitViewController {
             let controllers = split.viewControllers
@@ -47,7 +44,6 @@ class MasterViewController: UITableViewController {
         do {
             let decksRoot : NSURL = documentsDirectory.URLByAppendingPathComponent("Decks")
             let directoryContents = try NSFileManager.defaultManager().contentsOfDirectoryAtPath(decksRoot.path!)
-//            print("deck ::", directoryContents)
             for deckName in directoryContents {
                 if deckName[deckName.startIndex] != "." {
                     slideRootDirs.insert(decksRoot.URLByAppendingPathComponent(deckName), atIndex: 0)
@@ -89,7 +85,7 @@ class MasterViewController: UITableViewController {
 //        } else {
 //            print(self.splitViewController?.displayMode)
 //        }
-        splitViewController?.preferredDisplayMode = UISplitViewControllerDisplayMode.PrimaryHidden
+//        splitViewController?.preferredDisplayMode = UISplitViewControllerDisplayMode.PrimaryHidden
         if segue.identifier == "showDetail" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let slideRootDir = slideRootDirs[indexPath.row]
@@ -138,9 +134,7 @@ class MasterViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            print("Deleting", indexPath)
             let slideRootDir = slideRootDirs[indexPath.row]
-            print(slideRootDir)
             do {
                 try NSFileManager.defaultManager().removeItemAtURL(slideRootDir)
             } catch {
@@ -159,15 +153,7 @@ class MasterViewController: UITableViewController {
             }
             slideRootDirs.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
-    }
-    
-
-//    override func setEditing(editing: Bool, animated: Bool) {
-//        print("Set editing", editing, animated)
-//    }
-    
+    }    
 }
 
