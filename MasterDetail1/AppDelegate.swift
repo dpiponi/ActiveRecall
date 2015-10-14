@@ -16,6 +16,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     var window: UIWindow?
     var slideListController: MasterViewController! = nil
 
+    
+    func setUpDocumentation() {
+        // Set up documentation?
+        let path = NSBundle.mainBundle().pathForResource("ActiveRecall", ofType:"pdf")
+        let url = NSURL.fileURLWithPath(path!)
+        slideListController.setUpSlideDeck(openURL: url, moving:false, addingToList:false)
+    }
+
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         let splitViewController = self.window!.rootViewController as! UISplitViewController
 //        splitViewController.presentsWithGesture = true
@@ -33,11 +41,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         return true
     }
     
-    func setUpDocumentation() {
-        // Set up documentation?
-        let path = NSBundle.mainBundle().pathForResource("ActiveRecall", ofType:"pdf")
-        let url = NSURL.fileURLWithPath(path!)
-        slideListController.setUpSlideDeck(openURL: url, moving:false, addingToList:false)
+    // This is what's done when "Open in..." dialogue is completed.
+    func application(application: UIApplication, openURL url: NSURL,
+                     sourceApplication: String?, annotation: AnyObject)-> Bool {
+            slideListController.setUpSlideDeck(openURL: url, moving: true, addingToList:true)
+
+        return true
     }
     
     func splitViewController(svc: UISplitViewController, willHideViewController aViewController: UIViewController, withBarButtonItem barButtonItem: UIBarButtonItem, forPopoverController pc: UIPopoverController) {

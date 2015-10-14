@@ -9,6 +9,13 @@
 import Foundation
 import UIKit
 
+func numPDFPages(pdfFile : NSURL) -> Int {
+    let pdf : CGPDFDocument = CGPDFDocumentCreateWithURL(pdfFile)!
+    let numPages : Int = CGPDFDocumentGetNumberOfPages(pdf)
+
+    return numPages
+}
+
 func makeThumbnail(pdfFile: NSURL) -> UIImage {
     let pdf : CGPDFDocument = CGPDFDocumentCreateWithURL(pdfFile)!
     let border : UIColor = PDFBorder(pdf, pageNumber: 1)
@@ -64,6 +71,9 @@ func foldBorder<X>(bdat: UnsafeMutablePointer<UInt8>,
         return x
 }
 
+//
+// http://stackoverflow.com/questions/24073135/generic-type-constraint-for-numerical-type-only
+//
 protocol Num {
     init(_ v: Int)
     func +(lhs: Self, rhs: Self) -> Self
@@ -71,9 +81,6 @@ protocol Num {
     func *(lhs: Self, rhs: Self) -> Self
 }
 
-//
-// http://stackoverflow.com/questions/24073135/generic-type-constraint-for-numerical-type-only
-//
 extension CGFloat : Num { }
 
 func linstep<X:Num>(lambda: X, a: X, b: X) -> X {
@@ -91,9 +98,7 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     let iwidth = Int(width/downScale)
     let iheight = Int(height/downScale)
     
-    // Setup 1x1 pixel context to draw into
     let colorSpace : CGColorSpace = CGColorSpaceCreateDeviceRGB()!
-    //        let rawData : [UInt8] = [UInt8](count: 4, repeatedValue: 0)
     let bytesPerPixel : Int = 4
     let bytesPerRow : Int = bytesPerPixel*iwidth
     let bitsPerComponent : Int = 8
@@ -102,15 +107,14 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     // Use http://swiftdoc.org/v2.0/type/UnsafeMutablePointer/
     //
     let bitmapData = malloc(Int(bytesPerPixel*iwidth*iheight))
+    let bdat = UnsafeMutablePointer<UInt8>(bitmapData)
     
     //
     // https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CGBitmapContext/#//apple_ref/swift/tdef/c:@T@CGBitmapContextReleaseDataCallback
     //
     let maybeContext2 : CGContextRef? = CGBitmapContextCreateWithData(bitmapData,
-        iwidth,
-        iheight,
-        bitsPerComponent,
-        bytesPerRow,
+        iwidth, iheight,
+        bitsPerComponent, bytesPerRow,
         colorSpace,
         CGImageAlphaInfo.PremultipliedLast.rawValue | CGBitmapInfo.ByteOrder32Big.rawValue,
         {(releaseInfo, data) -> Void in free(data)},
@@ -127,7 +131,6 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     CGContextScaleCTM(context2, 1.0/CGFloat(downScale), -1.0/CGFloat(downScale))
     CGContextTranslateCTM(context2, -0.5*width-xoffset, -0.5*height+yoffset)
     
-    let bdat = UnsafeMutablePointer<UInt8>(bitmapData)
     for i in 0..<4 {
         bdat[i] = 255
     }

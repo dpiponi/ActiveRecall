@@ -58,9 +58,19 @@ class MasterViewController: UITableViewController {
         } catch {
             print("Couldn't list directory")
         }
-        
+ 
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:"didEnterBackground",
+            name: UIApplicationDidEnterBackgroundNotification,
+            object: nil)
+
     }
 
+    func didEnterBackground() {
+        print("Bye!")
+        self.presentedViewController?.dismissViewControllerAnimated(false, completion: nil)
+        
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -108,6 +118,7 @@ class MasterViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) 
 
         let slideRootDir = slideRootDirs[indexPath.row]
+        print(slideRootDir)
         let doc : CGPDFDocument = CGPDFDocumentCreateWithURL(slideRootDir.URLByAppendingPathComponent("slides.pdf"))!
         let numPages : Int = CGPDFDocumentGetNumberOfPages(doc)
         
@@ -151,6 +162,29 @@ class MasterViewController: UITableViewController {
     func setUpSlideDeck(openURL url: NSURL, moving: Bool, addingToList: Bool) {
         let filemgr = NSFileManager.defaultManager()
         
+        let numPages : Int = numPDFPages(url)
+        if numPages <= 1 {
+            let window = UIApplication.sharedApplication().keyWindow
+            if window!.rootViewController?.presentedViewController == nil {
+                let alertController = UIAlertController(title: "Too few pages",
+                    message: "Need 2 or more pages to make flash cards.",
+                    preferredStyle: .Alert)
+                
+                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in print("ok") }
+                alertController.addAction(OKAction)
+                
+                window!.rootViewController?.presentViewController(alertController, animated: true) {
+                }
+            }
+            
+            do {
+                try filemgr.removeItemAtURL(url)
+            } catch {
+            }
+            
+            return
+        }
+        
         let documentsDirectory = filemgr.URLsForDirectory(
             NSSearchPathDirectory.DocumentDirectory,
             inDomains: NSSearchPathDomainMask.UserDomainMask)[0]
@@ -160,6 +194,7 @@ class MasterViewController: UITableViewController {
             .URLByDeletingPathExtension!
         
         
+        print("Hello1")
         var updatingDeck : Bool = false
         // Create that directory
         if (filemgr.fileExistsAtPath(destDir.path!)) {
@@ -194,17 +229,21 @@ class MasterViewController: UITableViewController {
             } else {
                 try filemgr.copyItemAtURL(url, toURL:pdfPath)
             }
+            print("Hello2", addingToList)
             
             if addingToList {
                 let masterController = self // XXX
                 
                 // Tell master controller about root directory for card deck
                 if !updatingDeck {
+                    print("Hello3")
                     masterController.insertNewSlides(destDir)
                 } else {
+                    print("Hello4")
                     masterController.reload()
                 }
             }
+            print("Hello5")
         } catch {
             print("Failed")
             let window = UIApplication.sharedApplication().keyWindow
@@ -223,8 +262,8 @@ class MasterViewController: UITableViewController {
         }
         
         // Do I need to release this document?
-        let pdfDocument = CGPDFDocumentCreateWithURL(pdfPath)
-        let numPages : Int = CGPDFDocumentGetNumberOfPages(pdfDocument)
+//        let pdfDocument = CGPDFDocumentCreateWithURL(pdfPath)
+//        let numPages : Int = CGPDFDocumentGetNumberOfPages(pdfDocument)
         let numCards = numPages/2
         let destCards = destDir.URLByAppendingPathComponent("deck.dat")
         
