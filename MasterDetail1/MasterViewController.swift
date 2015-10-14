@@ -79,17 +79,7 @@ class MasterViewController: UITableViewController {
         self.tableView.reloadData()
     }
 
-    // MARK: - Segues
-
-    // This is when detail is selected.
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if (self.splitViewController?.displayMode == UISplitViewControllerDisplayMode.PrimaryOverlay){
-//            splitViewController?.preferredDisplayMode = UISplitViewControllerDisplayMode.PrimaryHidden
-////            splitViewController?.preferredDisplayMode = UISplitViewControllerDisplayMode.Automatic
-//        } else {
-//            print(self.splitViewController?.displayMode)
-//        }
-//        splitViewController?.preferredDisplayMode = UISplitViewControllerDisplayMode.PrimaryHidden
         if segue.identifier == "showDetail" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let slideRootDir = slideRootDirs[indexPath.row]
@@ -98,11 +88,6 @@ class MasterViewController: UITableViewController {
                 detailController.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
 
                 // http://stackoverflow.com/questions/9273204/can-you-add-buttons-to-navigation-bars-through-storyboard
-                
-//                detailController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Options", style: .Plain, target: detailController, action: "doOptions:")
-                
-                // This is where some options can go XXX
-//                detailController.navigationItem.rightBarButtonItem = self.splitViewController?.displayModeButtonItem()
                 
                 detailController.navigationItem.leftItemsSupplementBackButton = true
                 detailController.navigationItem.title = slideRootDir.lastPathComponent

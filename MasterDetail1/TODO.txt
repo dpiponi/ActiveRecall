@@ -42,3 +42,6 @@ DONE
 33. Right swipe empty detail crashes.
 27. Documentation slide deck
 35. Detail "back" button to say "Slide Decks"
+36. Storyboard "Options" button"
+37. Cancel on Options button
+38. Dismiss Option menu on backgrounding.

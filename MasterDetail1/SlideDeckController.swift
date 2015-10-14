@@ -49,8 +49,22 @@ class SlideDeckController : UIViewController {
             let deck = NSKeyedUnarchiver.unarchiveObjectWithFile(deckURL.path!) as! Deck
             setPage(deck)
         }
+        
+        //
+        // http://stackoverflow.com/questions/24049020/nsnotificationcenter-addobserver-in-swift
+        // http://useyourloaf.com/blog/uialertcontroller-changes-in-ios-8.html
+        //
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:"didEnterBackground",
+                                                         name: UIApplicationDidEnterBackgroundNotification,
+                                                         object: nil)
     }
+    
+    func didEnterBackground() {
+        print("Bye!")
+        self.presentedViewController?.dismissViewControllerAnimated(false, completion: nil)
 
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -92,6 +106,11 @@ class SlideDeckController : UIViewController {
             }
             alertController.addAction(OKAction4)
             
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) {
+                (_) in
+            }
+            alertController.addAction(cancelAction)
+            
             // Slight behaviour difference on iPad
             if let controller = alertController.popoverPresentationController {
                 controller.barButtonItem = sender
@@ -118,7 +137,6 @@ class SlideDeckController : UIViewController {
             } else {
                 self.displayingFront = !self.displayingFront
             }
-//            self.setPage(deck)
         }
     }
     
@@ -135,7 +153,6 @@ class SlideDeckController : UIViewController {
             (deck) -> Void in
             deck.undo()
             self.displayingFront = true
-//            self.setPage(deck)
         }
     }
     
@@ -144,7 +161,6 @@ class SlideDeckController : UIViewController {
             (deck) -> Void in
             deck.reset()
             self.displayingFront = true
-//            self.setPage(deck)
         }
     }
     
@@ -152,7 +168,6 @@ class SlideDeckController : UIViewController {
         withDeck {
             (deck) -> Void in
             self.shouldDisplayFront = !self.shouldDisplayFront
-//            self.setPage(deck)
         }
     }
     
@@ -161,7 +176,6 @@ class SlideDeckController : UIViewController {
             (deck) -> Void in
             deck.undo()
             self.displayingFront = true
-//            self.setPage(deck)
         }
     }
     @IBAction func swipeRightHandler(sender: AnyObject) {
@@ -169,7 +183,6 @@ class SlideDeckController : UIViewController {
             (deck) -> Void in
             deck.moveFrontToBack()
             self.displayingFront = true
-//            self.setPage(deck)
         }
     }
     
@@ -178,47 +191,7 @@ class SlideDeckController : UIViewController {
             (deck) -> Void in
             deck.shuffle()
             self.displayingFront = true
-//            self.setPage(deck)
         }
     }
-    
-//    override func canBecomeFirstResponder() -> Bool {
-//        return true
-//    }
-
-
-//    // http://stackoverflow.com/questions/27681887/how-to-fix-run-time-error-using-uialertcontroller
-//    override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
-//        if motion == .MotionShake {
-//            
-//            
-//            let window = UIApplication.sharedApplication().keyWindow
-//            if window?.rootViewController?.presentedViewController == nil {
-//                let alertController = UIAlertController(title: "Shake", message: "Do you wish to shuffle deck?", preferredStyle: .ActionSheet)
-//                
-//                let OKAction = UIAlertAction(title: "Yes", style: .Default) { (_) in
-//                        self.withDeck({(deck) -> Void in
-//                                deck.shuffle()
-//                                self.displayingFront = true
-//                                self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
-//                        })}
-//                alertController.addAction(OKAction)
-//                let OKAction2 = UIAlertAction(title: "No", style: .Default) { (action) in print("ok") }
-//                alertController.addAction(OKAction2)
-//
-//                if let controller = alertController.popoverPresentationController {
-//                    controller.sourceView = self.view;
-//                    controller.sourceRect = CGRectMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.0, 1.0, 1.0);
-//                }
-//                
-//                window?.rootViewController?.presentViewController(alertController, animated: true) {
-//                    print("what?")
-//                }
-//            }
-//
-//            
-//        }
-//    }
-
 }
 

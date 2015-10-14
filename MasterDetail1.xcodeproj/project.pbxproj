@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		37BD82861BC05E4E00E6108A /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BD82851BC05E4E00E6108A /* Downloader.swift */; };
 		BD3A1D231BC38DAD00E40A00 /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3A1D221BC38DAD00E40A00 /* Deck.swift */; };
 		BD3A1D251BC42A2E00E40A00 /* TODO.txt in Resources */ = {isa = PBXBuildFile; fileRef = BD3A1D241BC42A2E00E40A00 /* TODO.txt */; };
 		BD62290E1BCD638E00E17E35 /* ActiveRecall.pdf in Resources */ = {isa = PBXBuildFile; fileRef = BD62290D1BCD638E00E17E35 /* ActiveRecall.pdf */; };
@@ -33,7 +32,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		37BD82851BC05E4E00E6108A /* Downloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
 		BD3A1D221BC38DAD00E40A00 /* Deck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Deck.swift; path = MasterDetail1/Deck.swift; sourceTree = SOURCE_ROOT; };
 		BD3A1D241BC42A2E00E40A00 /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TODO.txt; path = MasterDetail1/TODO.txt; sourceTree = SOURCE_ROOT; };
 		BD62290D1BCD638E00E17E35 /* ActiveRecall.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ActiveRecall.pdf; sourceTree = "<group>"; };
@@ -97,7 +95,6 @@
 				BDCD6D9C1BBE189C009A1FF9 /* MasterViewController.swift */,
 				BDCD6D9E1BBE189C009A1FF9 /* SlideDeckController.swift */,
 				BD3A1D221BC38DAD00E40A00 /* Deck.swift */,
-				37BD82851BC05E4E00E6108A /* Downloader.swift */,
 				BDAA55481BC71D53002F24CD /* PDFBorder.swift */,
 				BDCD6DBC1BBED9C3009A1FF9 /* PDFView.swift */,
 				BDCD6DA01BBE189C009A1FF9 /* Main.storyboard */,
@@ -239,7 +236,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				BD3A1D231BC38DAD00E40A00 /* Deck.swift in Sources */,
-				37BD82861BC05E4E00E6108A /* Downloader.swift in Sources */,
 				BDAA55491BC71D53002F24CD /* PDFBorder.swift in Sources */,
 				BDCD6D9F1BBE189C009A1FF9 /* SlideDeckController.swift in Sources */,
 				BDCD6DBD1BBED9C3009A1FF9 /* PDFView.swift in Sources */,
