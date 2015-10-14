@@ -67,7 +67,13 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Slides" id="mOI-FS-AaM"/>
+                    <navigationItem key="navigationItem" title="Slides" id="mOI-FS-AaM">
+                        <barButtonItem key="rightBarButtonItem" title="Options" id="qNg-D1-ZbG">
+                            <connections>
+                                <action selector="doOptions:" destination="JEX-9P-axG" id="88g-xB-keW"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="pdfView" destination="ucH-Lb-kPe" id="tBm-r1-Fbx"/>
                     </connections>

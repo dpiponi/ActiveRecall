@@ -97,7 +97,9 @@ class MasterViewController: UITableViewController {
                 detailController.slideRootDir = slideRootDir
                 detailController.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
 
-                detailController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Options", style: .Plain, target: detailController, action: "doOptions:")
+                // http://stackoverflow.com/questions/9273204/can-you-add-buttons-to-navigation-bars-through-storyboard
+                
+//                detailController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Options", style: .Plain, target: detailController, action: "doOptions:")
                 
                 // This is where some options can go XXX
 //                detailController.navigationItem.rightBarButtonItem = self.splitViewController?.displayModeButtonItem()
