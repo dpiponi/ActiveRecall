@@ -158,6 +158,99 @@ class MasterViewController: UITableViewController {
             slideRootDirs.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
-    }    
+    }
+    
+    // XXX DEAL WITH ONE PAGE PDF
+    func setUpSlideDeck(openURL url: NSURL, moving: Bool, addingToList: Bool) {
+        let filemgr = NSFileManager.defaultManager()
+        
+        let documentsDirectory = filemgr.URLsForDirectory(
+            NSSearchPathDirectory.DocumentDirectory,
+            inDomains: NSSearchPathDomainMask.UserDomainMask)[0]
+        
+        let destDir : NSURL = documentsDirectory.URLByAppendingPathComponent("Decks")
+            .URLByAppendingPathComponent(url.lastPathComponent!)
+            .URLByDeletingPathExtension!
+        
+        
+        var updatingDeck : Bool = false
+        // Create that directory
+        if (filemgr.fileExistsAtPath(destDir.path!)) {
+            updatingDeck = true
+        } else {
+            do {
+                try filemgr.createDirectoryAtPath(destDir.path!, withIntermediateDirectories: true, attributes: nil)
+                print("Created directory at", destDir)
+            } catch {
+                // It must already exist
+                // Though we already tested this and it shouldn't happen.
+                print("Already exists!")
+                updatingDeck = true
+            }
+        }
+        
+        // Get path of slides within that directory
+        let pdfPath = destDir.URLByAppendingPathComponent("slides.pdf")
+        
+        if updatingDeck {
+            do {
+                try filemgr.removeItemAtURL(pdfPath)
+            } catch {
+                print("Couldn't remove item from", pdfPath)
+            }
+        }
+        // Move slides from Inbox to new destination
+        do {
+            //
+            if moving {
+                try filemgr.moveItemAtURL(url, toURL:pdfPath)
+            } else {
+                try filemgr.copyItemAtURL(url, toURL:pdfPath)
+            }
+            
+            if addingToList {
+                let masterController = self // XXX
+                
+                // Tell master controller about root directory for card deck
+                if !updatingDeck {
+                    masterController.insertNewSlides(destDir)
+                } else {
+                    masterController.reload()
+                }
+            }
+        } catch {
+            print("Failed")
+            let window = UIApplication.sharedApplication().keyWindow
+            if window!.rootViewController?.presentedViewController == nil {
+                let alertController = UIAlertController(title: "Problem",
+                    message: "Unable to copy PDF slides.",
+                    preferredStyle: .Alert)
+                
+                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in print("ok") }
+                alertController.addAction(OKAction)
+                
+                window!.rootViewController?.presentViewController(alertController, animated: true) {
+                    print("what?")
+                }
+            }
+        }
+        
+        // Do I need to release this document?
+        let pdfDocument = CGPDFDocumentCreateWithURL(pdfPath)
+        let numPages : Int = CGPDFDocumentGetNumberOfPages(pdfDocument)
+        let numCards = numPages/2
+        let destCards = destDir.URLByAppendingPathComponent("deck.dat")
+        
+        var deck : Deck!
+        if updatingDeck {
+            deck = NSKeyedUnarchiver.unarchiveObjectWithFile(destCards.path!) as! Deck
+            deck.resize(numCards)
+        } else {
+            deck = Deck(numCards: numCards, initCardLevel: 8)
+            deck.start()
+        }
+        NSKeyedArchiver.archiveRootObject(deck, toFile: destCards.path!)
+    }
+
 }
 

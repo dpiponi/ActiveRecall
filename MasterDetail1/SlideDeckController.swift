@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class SlideDeckController : UIViewController {
 
     @IBOutlet weak var pdfView: PDFView!
@@ -18,6 +17,10 @@ class SlideDeckController : UIViewController {
     func pageNumberFromDeck(deck : Deck)  -> Int {
         let n = 1+2*deck.cardIndices[0]+(self.displayingFront == self.shouldDisplayFront ? 0 : 1)
         return n
+    }
+    
+    func setPage(deck: Deck) {
+        pdfView.pageNumber = pageNumberFromDeck(deck)
     }
 
     func setPdf(url: NSURL) {
@@ -44,7 +47,7 @@ class SlideDeckController : UIViewController {
             pdfView.setPDF(slidesPath)
             let deckURL : NSURL = slideRootDir.URLByAppendingPathComponent("deck.dat")
             let deck = NSKeyedUnarchiver.unarchiveObjectWithFile(deckURL.path!) as! Deck
-            pdfView.pageNumber = pageNumberFromDeck(deck)
+            setPage(deck)
         }
     }
 
@@ -56,50 +59,48 @@ class SlideDeckController : UIViewController {
         if slideRootDir != nil {
             let deckURL : NSURL = slideRootDir!.URLByAppendingPathComponent("deck.dat")
             if NSFileManager.defaultManager().fileExistsAtPath(deckURL.path!) {
-                // Read in Deck
                 let deck = NSKeyedUnarchiver.unarchiveObjectWithFile(deckURL.path!) as! Deck
                 f(deck)
-                // Write deck back out again
                 NSKeyedArchiver.archiveRootObject(deck, toFile: deckURL.path!)
+                self.setPage(deck)
             }
         }
     }
-
     
     @IBAction func doOptions(sender: UIBarButtonItem) {
         let window = UIApplication.sharedApplication().keyWindow
         if window?.rootViewController?.presentedViewController == nil {
-            let alertController = UIAlertController(title: "Deck Options", message: "What do you want to do?", preferredStyle: .ActionSheet)
+            let alertController = UIAlertController(title: "Deck Options",
+                                                    message: "What do you want to do?",
+                                                    preferredStyle: .ActionSheet)
             
-            
-            let OKAction2 = UIAlertAction(title: "Reset", style: .Default) { (_) in
+            let resetAction = UIAlertAction(title: "Reset", style: .Default) {
+                (_) in
                 self.doReset()
             }
-            alertController.addAction(OKAction2)
+            alertController.addAction(resetAction)
             
-            let OKAction = UIAlertAction(title: "Shuffle", style: .Default) { (_) in
+            let OKAction = UIAlertAction(title: "Shuffle", style: .Default) {
+                (_) in
                 self.doShuffle() // YYY
             }
             alertController.addAction(OKAction)
                         
-            let OKAction4 = UIAlertAction(title: "Reverse", style: .Default) { (_) in
+            let OKAction4 = UIAlertAction(title: "Reverse", style: .Default) {
+                (_) in
                 self.doReverse()
             }
             alertController.addAction(OKAction4)
             
+            // Slight behaviour difference on iPad
             if let controller = alertController.popoverPresentationController {
                 controller.barButtonItem = sender
             }
             
-            window?.rootViewController?.presentViewController(alertController, animated: false) {
-                print("what?")
-            }
+            window?.rootViewController?.presentViewController(alertController, animated: false, completion: nil)
         }
     }
 
-    
-    
-    
     // Handle user tap
     @IBAction func tapHandler(recognizer:UITapGestureRecognizer) {
         guard slideRootDir != nil else { return }
@@ -117,9 +118,8 @@ class SlideDeckController : UIViewController {
             } else {
                 self.displayingFront = !self.displayingFront
             }
-            self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
+//            self.setPage(deck)
         }
-        
     }
     
     @IBAction func pinchHandler(sender: UIPinchGestureRecognizer) {
@@ -135,7 +135,7 @@ class SlideDeckController : UIViewController {
             (deck) -> Void in
             deck.undo()
             self.displayingFront = true
-            self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
+//            self.setPage(deck)
         }
     }
     
@@ -144,7 +144,7 @@ class SlideDeckController : UIViewController {
             (deck) -> Void in
             deck.reset()
             self.displayingFront = true
-            self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
+//            self.setPage(deck)
         }
     }
     
@@ -152,7 +152,7 @@ class SlideDeckController : UIViewController {
         withDeck {
             (deck) -> Void in
             self.shouldDisplayFront = !self.shouldDisplayFront
-            self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
+//            self.setPage(deck)
         }
     }
     
@@ -161,7 +161,7 @@ class SlideDeckController : UIViewController {
             (deck) -> Void in
             deck.undo()
             self.displayingFront = true
-            self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
+//            self.setPage(deck)
         }
     }
     @IBAction func swipeRightHandler(sender: AnyObject) {
@@ -169,7 +169,7 @@ class SlideDeckController : UIViewController {
             (deck) -> Void in
             deck.moveFrontToBack()
             self.displayingFront = true
-            self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
+//            self.setPage(deck)
         }
     }
     
@@ -178,7 +178,7 @@ class SlideDeckController : UIViewController {
             (deck) -> Void in
             deck.shuffle()
             self.displayingFront = true
-            self.pdfView.pageNumber = self.pageNumberFromDeck(deck)
+//            self.setPage(deck)
         }
     }
     
