@@ -46,6 +46,24 @@ func makeThumbnail(pdfFile: NSURL) -> UIImage {
     return thumbnailImage
 }
 
+func foldBorder<X>(bdat: UnsafeMutablePointer<UInt8>,
+                   iwidth: Int, iheight: Int,
+                   bytesPerPixel: Int,
+                   bytesPerRow: Int,
+                   x0: X,
+                   f : (UnsafeMutablePointer<UInt8>, Int, X) -> X) -> X {
+    var x : X = x0
+    for i in 0..<iwidth {
+        x = f(bdat, 4*i, x)
+        x = f(bdat, (iheight-1)*bytesPerRow+4*i, x)
+    }
+    for i in 0..<iheight {
+        x = f(bdat, i*bytesPerRow, x)
+        x = f(bdat, (iwidth-1)*bytesPerPixel+i*bytesPerRow, x)
+    }
+    return x
+}
+
 // Pick colour for border around slide.
 func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     let downScale : Int = 4
@@ -62,7 +80,10 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     let bytesPerPixel : Int = 4
     let bytesPerRow : Int = bytesPerPixel*iwidth
     let bitsPerComponent : Int = 8
+    
+    //
     // Use http://swiftdoc.org/v2.0/type/UnsafeMutablePointer/
+    //
     let bitmapData = malloc(Int(bytesPerPixel*iwidth*iheight))
     
     //
@@ -95,51 +116,24 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     }
 
     CGContextDrawPDFPage(context2, page)
-    var tr : CGFloat = 0.0
-    var tg : CGFloat = 0.0
-    var tb : CGFloat = 0.0
-    var count : Int = 0
-    for i in 0..<iwidth {
-        let index : Int = 4*i
+    let borderColour = foldBorder(bdat,
+        iwidth: iwidth, iheight: iheight,
+        bytesPerPixel: bytesPerPixel, bytesPerRow: bytesPerRow,
+        x0: (tr:CGFloat(0.0), tg:CGFloat(0.0), tb:CGFloat(0.0), count:0)) {
+            (bdat, index, x0) in
+            var x : (tr: CGFloat, tg: CGFloat, tb: CGFloat, count: Int)
+            
         let alpha : CGFloat = CGFloat(bdat[index+3])/255.0
-        tr += alpha*CGFloat(bdat[index])/CGFloat(255)+(1-alpha)
-        tg += alpha*CGFloat(bdat[index+1])/CGFloat(255)+(1-alpha)
-        tb += alpha*CGFloat(bdat[index+2])/CGFloat(255)+(1-alpha)
-        count += 1
+        x.tr = x0.tr+alpha*CGFloat(bdat[index])/CGFloat(255)+(1-alpha)
+        x.tg = x0.tg+alpha*CGFloat(bdat[index+1])/CGFloat(255)+(1-alpha)
+        x.tb = x0.tb+alpha*CGFloat(bdat[index+2])/CGFloat(255)+(1-alpha)
+        x.count = x0.count+1
+            
+        return x
     }
-    for i in 0..<iwidth {
-        let index : Int = (iheight-1)*bytesPerRow+4*i
-        let alpha : CGFloat = CGFloat(bdat[index+3])/255.0
-        tr += alpha*CGFloat(bdat[index])/CGFloat(255)+(1-alpha)
-        tg += alpha*CGFloat(bdat[index+1])/CGFloat(255)+(1-alpha)
-        tb += alpha*CGFloat(bdat[index+2])/CGFloat(255)+(1-alpha)
-        count += 1
-    }
-    for i in 0..<iheight {
-        let index : Int = i*bytesPerRow
-        let alpha : CGFloat = CGFloat(bdat[index+3])/255.0
-        tr += alpha*CGFloat(bdat[index])/CGFloat(255)+(1-alpha)
-        tg += alpha*CGFloat(bdat[index+1])/CGFloat(255)+(1-alpha)
-        tb += alpha*CGFloat(bdat[index+2])/CGFloat(255)+(1-alpha)
-        count += 1
-    }
-    for i in 0..<iheight {
-        let index : Int = (iwidth-1)*bytesPerPixel+i*bytesPerRow
-        let alpha : CGFloat = CGFloat(bdat[index+3])/255.0
-        tr += alpha*CGFloat(bdat[index])/CGFloat(255)+(1-alpha)
-        tg += alpha*CGFloat(bdat[index+1])/CGFloat(255)+(1-alpha)
-        tb += alpha*CGFloat(bdat[index+2])/CGFloat(255)+(1-alpha)
-        count += 1
-    }
-    tr /= CGFloat(count)
-    tg /= CGFloat(count)
-    tb /= CGFloat(count)
-    for i in 0..<(iwidth*iheight*bytesPerPixel) {
-        bdat[i] = 255
-        if i & 3 == 3 {
-            bdat[i] = 0
-        }
-    }
+    let tr = borderColour.tr/CGFloat(borderColour.count)
+    let tg = borderColour.tg/CGFloat(borderColour.count)
+    let tb = borderColour.tb/CGFloat(borderColour.count)
     
     CGContextRestoreGState(context2);
     
