@@ -9,11 +9,6 @@
 import Foundation
 import UIKit
 
-//func getNumPages(pdfFile: NSURL) -> Int {
-//    let pdf : CGPDFDocument = CGPDFDocumentCreateWithURL(pdfFile)!
-//    
-//}
-
 func makeThumbnail(pdfFile: NSURL) -> UIImage {
     let pdf : CGPDFDocument = CGPDFDocumentCreateWithURL(pdfFile)!
     let border : UIColor = PDFBorder(pdf, pageNumber: 1)
@@ -67,9 +62,12 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     let bytesPerPixel : Int = 4
     let bytesPerRow : Int = bytesPerPixel*iwidth
     let bitsPerComponent : Int = 8
+    // Use http://swiftdoc.org/v2.0/type/UnsafeMutablePointer/
     let bitmapData = malloc(Int(bytesPerPixel*iwidth*iheight))
     
+    //
     // https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CGBitmapContext/#//apple_ref/swift/tdef/c:@T@CGBitmapContextReleaseDataCallback
+    //
     let maybeContext2 : CGContextRef? = CGBitmapContextCreateWithData(bitmapData,
         iwidth,
         iheight,
@@ -86,19 +84,15 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     let xoffset : CGFloat = 0.0
     let yoffset : CGFloat = 0.0
 
-    // Draw the image (fill irrelevant???)
     CGContextSetFillColorWithColor(context2, UIColor.whiteColor().CGColor)
-
     CGContextTranslateCTM(context2, 0.5*CGFloat(iwidth), 0.5*CGFloat(iheight))
-    //            CGContextScaleCTM(context, scale, scale)
     CGContextScaleCTM(context2, 1.0/CGFloat(downScale), -1.0/CGFloat(downScale))
     CGContextTranslateCTM(context2, -0.5*width-xoffset, -0.5*height+yoffset)
 
     let bdat = UnsafeMutablePointer<UInt8>(bitmapData)
-    bdat[0] = 255
-    bdat[1] = 255
-    bdat[2] = 255
-    bdat[3] = 255
+    for i in 0..<4 {
+        bdat[i] = 255
+    }
 
     CGContextDrawPDFPage(context2, page)
     var tr : CGFloat = 0.0

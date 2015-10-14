@@ -18,11 +18,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         let splitViewController = self.window!.rootViewController as! UISplitViewController
-        splitViewController.presentsWithGesture = true
+//        splitViewController.presentsWithGesture = true
         let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
 
         let barButton = splitViewController.displayModeButtonItem()
-//        barButton.title = "Slide Decks"
         navigationController.topViewController!.navigationItem.leftBarButtonItem = barButton
         splitViewController.delegate = self
         
@@ -37,13 +36,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func setUpDocumentation() {
         // Set up documentation?
         let path = NSBundle.mainBundle().pathForResource("ActiveRecall", ofType:"pdf")
-        print("path=", path)
         let url = NSURL.fileURLWithPath(path!)
         slideListController.setUpSlideDeck(openURL: url, moving:false, addingToList:false)
     }
     
     func splitViewController(svc: UISplitViewController, willHideViewController aViewController: UIViewController, withBarButtonItem barButtonItem: UIBarButtonItem, forPopoverController pc: UIPopoverController) {
-        print("XXXXXXX")
     }
 
     func applicationWillResignActive(application: UIApplication) {
