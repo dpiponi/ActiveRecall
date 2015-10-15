@@ -135,13 +135,24 @@ class Deck : NSObject, NSCoding {
     // Fisher-Yates
     //
     func shuffle() {
-        for i in (numCards-1).stride(to: 1, by: -1) {
-            let j = Int(arc4random_uniform(UInt32(i+1)))
-            if i != j {
-                swap(&cardIndices[i], &cardIndices[j])
+        if numCards > 1 {
+            let currentCard = cardIndices[0]
+            
+            for i in (numCards-1).stride(to: 1, by: -1) {
+                let j = Int(arc4random_uniform(UInt32(i+1)))
+                if i != j {
+                    swap(&cardIndices[i], &cardIndices[j])
+                }
             }
+            
+            // Users won't believe it's a real shuffle unless the top card changes
+            if cardIndices[0] == currentCard {
+                let i : Int = Int(arc4random_uniform(UInt32(numCards)-1))+1
+                swap(&cardIndices[0], &cardIndices[i])
+            }
+            
+            history.removeAll()
+            levelHistory.removeAll()
         }
-        history.removeAll()
-        levelHistory.removeAll()
     }
 }
