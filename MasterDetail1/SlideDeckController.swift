@@ -88,28 +88,17 @@ class SlideDeckController : UIViewController {
                                                     message: "What do you want to do?",
                                                     preferredStyle: .ActionSheet)
             
-            let resetAction = UIAlertAction(title: "Reset", style: .Default) {
-                (_) in
-                self.doReset()
+            for (title, action, style) in [("Reset", self.doReset, UIAlertActionStyle.Default),
+                                           ("Shuffle", self.doShuffle, .Default),
+                                           ("Reverse", self.doReverse, .Default),
+                                           ("Cancel", {() -> Void in  }, .Cancel)] {
+                let resetAction = UIAlertAction(title: title, style: style) {
+                    (_) in
+                    action()
+                }
+                alertController.addAction(resetAction)
+                
             }
-            alertController.addAction(resetAction)
-            
-            let OKAction = UIAlertAction(title: "Shuffle", style: .Default) {
-                (_) in
-                self.doShuffle() // YYY
-            }
-            alertController.addAction(OKAction)
-                        
-            let OKAction4 = UIAlertAction(title: "Reverse", style: .Default) {
-                (_) in
-                self.doReverse()
-            }
-            alertController.addAction(OKAction4)
-            
-            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) {
-                (_) in
-            }
-            alertController.addAction(cancelAction)
             
             // Slight behaviour difference on iPad
             if let controller = alertController.popoverPresentationController {
