@@ -131,58 +131,17 @@ class Deck : NSObject, NSCoding {
             levelHistory.removeAtIndex(0)
         }
     }
+    //
+    // Fisher-Yates
+    //
     func shuffle() {
         for i in (numCards-1).stride(to: 1, by: -1) {
-            let j = arc4random_uniform(UInt32(i+1))
-            let t = cardIndices[Int(i)]
-            cardIndices[Int(i)] = cardIndices[Int(j)]
-            cardIndices[Int(j)] = t
+            let j = Int(arc4random_uniform(UInt32(i+1)))
+            if i != j {
+                swap(&cardIndices[i], &cardIndices[j])
+            }
         }
         history.removeAll()
         levelHistory.removeAll()
     }
 }
-
-//var deck : Deck
-//
-////deck = (NSKeyedUnarchiver.unarchiveObjectWithFile("cards.dat") as? Deck) ?? Deck(numCards:16, initCardLevel:8)
-//if false {
-//    deck = Deck(numCards:16, initCardLevel:8)
-//    deck.start()
-//} else {
-//    deck = NSKeyedUnarchiver.unarchiveObjectWithFile("cards.dat") as! Deck
-//}
-//
-////if (deck == nil) {
-////    print("Making a new deck")
-////    deck = Deck(numCards: 16, initCardLevel: 8)
-////    deck?.start()
-////}
-//
-////var deck = deck else { }
-//
-////let u = deck.cardIndices.removeAtIndex(0)
-////deck.cardIndices.append(u)
-//
-//while true {
-//    deck.dump()
-//    var s : String = input()
-//    
-//    if (s == "y") {
-//        deck.correct()
-//    } else if (s == "q") {
-//        break
-//    } else if (s == "s") {
-//        deck.start()
-//    } else if (s == "+") {
-//        deck.resize(deck.numCards+1)
-//    } else if (s == "-") {
-//        deck.resize(deck.numCards-1)
-//    } else {
-//        deck.incorrect()
-//    }
-//}
-//
-//deck.dump()
-//
-//NSKeyedArchiver.archiveRootObject(deck, toFile: "cards.dat")
