@@ -9,6 +9,13 @@
 import Foundation
 import UIKit
 
+func numPDFPages(pdfFile : NSURL) -> Int {
+    let pdf : CGPDFDocument = CGPDFDocumentCreateWithURL(pdfFile)!
+    let numPages : Int = CGPDFDocumentGetNumberOfPages(pdf)
+
+    return numPages
+}
+
 func makeThumbnail(pdfFile: NSURL) -> UIImage {
     let pdf : CGPDFDocument = CGPDFDocumentCreateWithURL(pdfFile)!
     let border : UIColor = PDFBorder(pdf, pageNumber: 1)
@@ -81,31 +88,32 @@ for i in 0..<iheight {
 
 // Pick colour for border around slide.
 func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
-    let downScale : Int = 4
     let page = CGPDFDocumentGetPage(document, pageNumber)
     let pageRect = CGPDFPageGetBoxRect(page, .MediaBox)
     let width = pageRect.size.width;
     let height = pageRect.size.height;
-    let iwidth = Int(width)/downScale
-    let iheight = Int(height)/downScale
-
-    // Setup 1x1 pixel context to draw into
+    
+    let downScale : CGFloat = max(width, height)/128.0
+    let iwidth = Int(width/downScale)
+    let iheight = Int(height/downScale)
+    
     let colorSpace : CGColorSpace = CGColorSpaceCreateDeviceRGB()!
-    //        let rawData : [UInt8] = [UInt8](count: 4, repeatedValue: 0)
     let bytesPerPixel : Int = 4
     let bytesPerRow : Int = bytesPerPixel*iwidth
     let bitsPerComponent : Int = 8
+    
+    //
     // Use http://swiftdoc.org/v2.0/type/UnsafeMutablePointer/
+    //
     let bitmapData = malloc(Int(bytesPerPixel*iwidth*iheight))
+    let bdat = UnsafeMutablePointer<UInt8>(bitmapData)
     
     //
     // https://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CGBitmapContext/#//apple_ref/swift/tdef/c:@T@CGBitmapContextReleaseDataCallback
     //
     let maybeContext2 : CGContextRef? = CGBitmapContextCreateWithData(bitmapData,
-        iwidth,
-        iheight,
-        bitsPerComponent,
-        bytesPerRow,
+        iwidth, iheight,
+        bitsPerComponent, bytesPerRow,
         colorSpace,
         CGImageAlphaInfo.PremultipliedLast.rawValue | CGBitmapInfo.ByteOrder32Big.rawValue,
         {(releaseInfo, data) -> Void in free(data)},
@@ -113,20 +121,19 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     let context2 = maybeContext2!
     CGContextSaveGState(context2);
     CGContextSetBlendMode(context2, .Copy);
-
+    
     let xoffset : CGFloat = 0.0
     let yoffset : CGFloat = 0.0
-
+    
     CGContextSetFillColorWithColor(context2, UIColor.whiteColor().CGColor)
     CGContextTranslateCTM(context2, 0.5*CGFloat(iwidth), 0.5*CGFloat(iheight))
     CGContextScaleCTM(context2, 1.0/CGFloat(downScale), -1.0/CGFloat(downScale))
     CGContextTranslateCTM(context2, -0.5*width-xoffset, -0.5*height+yoffset)
-
-    let bdat = UnsafeMutablePointer<UInt8>(bitmapData)
+    
     for i in 0..<4 {
         bdat[i] = 255
     }
-
+    
     CGContextDrawPDFPage(context2, page)
     var tr : CGFloat = 0.0
     var tg : CGFloat = 0.0
@@ -171,12 +178,15 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
             bdat[i] = 0
         }
     }
+    let tr = borderColour.tr/CGFloat(borderColour.count)
+    let tg = borderColour.tg/CGFloat(borderColour.count)
+    let tb = borderColour.tb/CGFloat(borderColour.count)
     
     CGContextRestoreGState(context2);
     
     // http://stackoverflow.com/questions/9444295/ios-does-cgbitmapcontextcreate-copy-data
-//    free(bitmapData)
-
-//    self.backgroundColor = UIColor(red: CGFloat(bdat[0])/255.0, green: CGFloat(bdat[1])/255.0, blue: CGFloat(bdat[2])/255.0, alpha: CGFloat(1.0))
+    //    free(bitmapData)
+    
+    //    self.backgroundColor = UIColor(red: CGFloat(bdat[0])/255.0, green: CGFloat(bdat[1])/255.0, blue: CGFloat(bdat[2])/255.0, alpha: CGFloat(1.0))
     return UIColor(red: tr, green: tg, blue: tb, alpha: CGFloat(1.0))
 }

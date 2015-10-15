@@ -8,7 +8,6 @@ TODO
 28. Examples
 32. Start in master? See http://stackoverflow.com/questions/25875618/uisplitviewcontroller-in-portrait-on-iphone-shows-detail-vc-instead-of-master
 34. Maybe cache thumbnails
-39. Deal with one page PDFs
 
 DONE
 ====
@@ -46,3 +45,5 @@ DONE
 36. Storyboard "Options" button"
 37. Cancel on Options button
 38. Dismiss Option menu on backgrounding.
+40. Refactor border colour computation
+39. Deal with one page PDFs
