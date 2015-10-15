@@ -39,17 +39,17 @@ class MasterViewController: UITableViewController {
         // Set up list of slide decks by enumerating contents
         // of Decks directory
         let filemgr = NSFileManager.defaultManager()
-        let paths = filemgr.URLsForDirectory(
-            NSSearchPathDirectory.DocumentDirectory,
-            inDomains: NSSearchPathDomainMask.UserDomainMask)
-        
-        // Get user documents directory
-        let documentsDirectory = paths[0]
+//        let paths = filemgr.URLsForDirectory(
+//            NSSearchPathDirectory.DocumentDirectory,
+//            inDomains: NSSearchPathDomainMask.UserDomainMask)
+//        
+//        // Get user documents directory
+//        let documentsDirectory = paths[0] // docsdir func needed
         do {
             let decksRoot : NSURL = documentsDirectory.URLByAppendingPathComponent("Decks")
             let directoryContents = try filemgr.contentsOfDirectoryAtPath(decksRoot.path!)
             for deckName in directoryContents {
-                if deckName[deckName.startIndex] != "." {
+                if deckName[deckName.startIndex] != "." { // XXX Insert new slides !!!
                     slideRootDirs.insert(decksRoot.URLByAppendingPathComponent(deckName), atIndex: 0)
                     let indexPath = NSIndexPath(forRow: 0, inSection: 0)
                     self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
@@ -158,7 +158,6 @@ class MasterViewController: UITableViewController {
         }
     }
     
-    // XXX DEAL WITH ONE PAGE PDF
     func setUpSlideDeck(openURL url: NSURL, moving: Bool, addingToList: Bool) {
         let filemgr = NSFileManager.defaultManager()
         
@@ -185,9 +184,9 @@ class MasterViewController: UITableViewController {
             return
         }
         
-        let documentsDirectory = filemgr.URLsForDirectory(
-            NSSearchPathDirectory.DocumentDirectory,
-            inDomains: NSSearchPathDomainMask.UserDomainMask)[0]
+//        let documentsDirectory = filemgr.URLsForDirectory(
+//            NSSearchPathDirectory.DocumentDirectory,
+//            inDomains: NSSearchPathDomainMask.UserDomainMask)[0]
         
         let destDir : NSURL = documentsDirectory.URLByAppendingPathComponent("Decks")
             .URLByAppendingPathComponent(url.lastPathComponent!)

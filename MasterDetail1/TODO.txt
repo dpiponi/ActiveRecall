@@ -8,6 +8,8 @@ TODO
 28. Examples
 32. Start in master? See http://stackoverflow.com/questions/25875618/uisplitviewcontroller-in-portrait-on-iphone-shows-detail-vc-instead-of-master
 34. Maybe cache thumbnails
+40. Test one card deck
+41. Shuffle should always change top card
 
 DONE
 ====
