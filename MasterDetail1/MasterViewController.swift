@@ -47,7 +47,7 @@ class MasterViewController: UITableViewController {
         let documentsDirectory = paths[0]
         do {
             let decksRoot : NSURL = documentsDirectory.URLByAppendingPathComponent("Decks")
-            let directoryContents = try NSFileManager.defaultManager().contentsOfDirectoryAtPath(decksRoot.path!)
+            let directoryContents = try filemgr.contentsOfDirectoryAtPath(decksRoot.path!)
             for deckName in directoryContents {
                 if deckName[deckName.startIndex] != "." {
                     slideRootDirs.insert(decksRoot.URLByAppendingPathComponent(deckName), atIndex: 0)
