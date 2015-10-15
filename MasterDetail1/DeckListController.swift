@@ -1,5 +1,5 @@
 //
-//  MasterViewController.swift
+//  DeckListController.swift
 //  MasterDetail1
 //
 //  Created by Dan Piponi on 10/1/15.
@@ -11,7 +11,7 @@ import UIKit
 // Will need...
 // http://stackoverflow.com/questions/9509993/make-only-certain-sections-of-uitableview-editable
 
-class MasterViewController: UITableViewController {
+class DeckListController: UITableViewController {
 
     var detailViewController: SlideDeckController? = nil
     var slideRootDirs = [NSURL]()

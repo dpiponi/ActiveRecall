@@ -14,7 +14,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
     var window: UIWindow?
-    var slideListController: MasterViewController! = nil
+    var slideListController: DeckListController! = nil
 
     
     func setUpDocumentation() {
@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         splitViewController.delegate = self
         
         let navController = splitViewController.viewControllers[0] as! UINavigationController
-        slideListController = navController.topViewController as! MasterViewController
+        slideListController = navController.topViewController as! DeckListController
         slideListController.title = "Slide Decks"
         
         setUpDocumentation()
