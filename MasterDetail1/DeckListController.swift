@@ -120,6 +120,8 @@ class DeckListController: UITableViewController {
         
         // http://stackoverflow.com/questions/4107850/how-can-i-programatically-generate-a-thumbnail-of-a-pdf-with-the-iphone-sdk
         cell.imageView?.image = makeOrGetThumbnail(slideRootDir)
+        
+        print(cell.textLabel!.text, slideRootDir)
                 
         return cell
     }

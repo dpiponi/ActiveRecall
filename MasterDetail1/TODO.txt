@@ -6,9 +6,10 @@ TODO
 21. Some animation
 23. Rename classes internally
 32. Start in master? See http://stackoverflow.com/questions/25875618/uisplitviewcontroller-in-portrait-on-iphone-shows-detail-vc-instead-of-master
-34. Maybe cache thumbnails
 42. Persistent preference state, eg. whether deck is flipped.
 44. Stop calling them "slides"!
+46. Why don't thubnails work?
+47. Consider clearing deck view when deck deleted.
 
 DONE
 ====
@@ -53,3 +54,5 @@ DONE
 28. Examples
 45. Built in example
 43. Call "reverse" "flipped"?"
+34. Maybe cache thumbnails
+45. Try "median" border colour"

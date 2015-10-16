@@ -20,19 +20,22 @@ func numPDFPages(pdfFile : NSURL) -> Int {
 // http://stackoverflow.com/questions/11592313/how-do-i-save-a-uiimage-to-a-file
 //
 func makeOrGetThumbnail(deckPath: NSURL) -> UIImage {
-    let thumbnailPath = deckPath.URLByAppendingPathComponent("thumbnail.png")
-    if NSFileManager.defaultManager().fileExistsAtPath(thumbnailPath.path!) {
-        print("Restoring thumbnail", thumbnailPath)
-        let thumbnailImage = UIImage(named: thumbnailPath.path!)
-        return thumbnailImage!
-    } else {
-        let slidePath = deckPath.URLByAppendingPathComponent("slides.pdf")
-        let thumbnailImage : UIImage = makeThumbnail(slidePath)
-        let pngImage : NSData = UIImagePNGRepresentation(thumbnailImage)!
-        pngImage.writeToFile(thumbnailPath.path!, atomically: true)
-        print("Creating thumbnail, storing at", thumbnailPath)
-        return thumbnailImage
-    }
+    let slidePath = deckPath.URLByAppendingPathComponent("slides.pdf")
+    return makeThumbnail(slidePath)
+//    let thumbnailPath = deckPath.URLByAppendingPathComponent("thumbnail.jpg")
+//    if NSFileManager.defaultManager().fileExistsAtPath(thumbnailPath.path!) {
+//        print("Restoring thumbnail", thumbnailPath)
+//        let thumbnailImage = UIImage(named: thumbnailPath.path!)
+//        print("image=", thumbnailImage)
+//        return thumbnailImage!
+//    } else {
+//        let slidePath = deckPath.URLByAppendingPathComponent("slides.pdf")
+//        let thumbnailImage : UIImage = makeThumbnail(slidePath)
+//        let pngImage : NSData = UIImageJPEGRepresentation(thumbnailImage, 0.8)!
+//        pngImage.writeToFile(thumbnailPath.path!, atomically: true)
+//        print("Creating thumbnail, storing at", thumbnailPath)
+//        return thumbnailImage
+//    }
 }
 
 func makeThumbnail(pdfFile: NSURL) -> UIImage {
@@ -155,7 +158,14 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     }
     
     CGContextDrawPDFPage(context2, page)
-    let borderColour = foldBorder(bdat,
+    
+    //
+    // Compute 'median' border colour. The notion of a 'median' isn't well defined in
+    // dimensions higher than 1. Nonetheless you can still use the iterative
+    // majorisation-minimisation algorithm on vectors and it gives you something.
+    // It seems to do roughly what I want.
+    //
+    let borderMean = foldBorder(bdat,
         iwidth: iwidth, iheight: iheight,
         bytesPerPixel: bytesPerPixel, bytesPerRow: bytesPerRow,
         x0: (tr:CGFloat(0.0), tg:CGFloat(0.0), tb:CGFloat(0.0), count:0)) {
@@ -171,9 +181,40 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
             
             return x
     }
-    let tr = borderColour.tr/CGFloat(borderColour.count)
-    let tg = borderColour.tg/CGFloat(borderColour.count)
-    let tb = borderColour.tb/CGFloat(borderColour.count)
+    var medianR = borderMean.tr/CGFloat(borderMean.count)
+    var medianG = borderMean.tg/CGFloat(borderMean.count)
+    var medianB = borderMean.tb/CGFloat(borderMean.count)
+    
+    for _ in 0..<40 {
+        let borderMedianStep = foldBorder(bdat,
+            iwidth: iwidth, iheight: iheight,
+            bytesPerPixel: bytesPerPixel, bytesPerRow: bytesPerRow,
+            x0: (tr:CGFloat(0.0), tg:CGFloat(0.0), tb:CGFloat(0.0), wsum:CGFloat(0.0))) {
+                (bdat, x0) in
+                
+                var x : (tr: CGFloat, tg: CGFloat, tb: CGFloat, wsum: CGFloat)
+                
+                let alpha : CGFloat = CGFloat(bdat[3])/255.0
+                let r = linstep(alpha, a: CGFloat(1.0), b: CGFloat(bdat[0])/CGFloat(255))
+                let g = linstep(alpha, a: CGFloat(1.0), b: CGFloat(bdat[1])/CGFloat(255))
+                let b = linstep(alpha, a: CGFloat(1.0), b: CGFloat(bdat[2])/CGFloat(255))
+                
+                let w = CGFloat(1.0)/CGFloat(sqrt(Float((r-medianR)*(r-medianR)+(g-medianG)*(g-medianG)+(b-medianB)*(b-medianB)))+1e-6)
+                
+                x.tr = x0.tr+w*r
+                x.tg = x0.tg+w*g
+                x.tb = x0.tb+w*b
+                x.wsum = x0.wsum+w
+                
+                return x
+        }
+        
+        medianR = borderMedianStep.tr/borderMedianStep.wsum
+        medianG = borderMedianStep.tg/borderMedianStep.wsum
+        medianB = borderMedianStep.tb/borderMedianStep.wsum
+        
+//        print(medianR, medianG, medianB)
+    }
     
     CGContextRestoreGState(context2);
     
@@ -181,5 +222,5 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     //    free(bitmapData)
     
     //    self.backgroundColor = UIColor(red: CGFloat(bdat[0])/255.0, green: CGFloat(bdat[1])/255.0, blue: CGFloat(bdat[2])/255.0, alpha: CGFloat(1.0))
-    return UIColor(red: tr, green: tg, blue: tb, alpha: CGFloat(1.0))
+    return UIColor(red: medianR, green: medianG, blue: medianB, alpha: CGFloat(1.0))
 }
