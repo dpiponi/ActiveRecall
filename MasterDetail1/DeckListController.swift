@@ -116,10 +116,14 @@ class DeckListController: UITableViewController {
         let doc : CGPDFDocument = CGPDFDocumentCreateWithURL(slideRootDir.URLByAppendingPathComponent("slides.pdf"))!
         let numPages : Int = CGPDFDocumentGetNumberOfPages(doc)
         
+        cell.textLabel!.text = nil
+        cell.imageView!.image = nil
+        
         cell.textLabel!.text = slideRootDir.lastPathComponent!+" ("+String(numPages/2)+")" //description)
         
-        // http://stackoverflow.com/questions/4107850/how-can-i-programatically-generate-a-thumbnail-of-a-pdf-with-the-iphone-sdk
-        cell.imageView?.image = makeOrGetThumbnail(slideRootDir)
+        let thumbNail = makeOrGetThumbnail(slideRootDir)
+        print("into table:", thumbNail)
+        cell.imageView!.image = thumbNail
         
         print(cell.textLabel!.text, slideRootDir)
                 
@@ -238,6 +242,8 @@ class DeckListController: UITableViewController {
                 
                 window!.rootViewController?.presentViewController(alertController, animated: true) {
                 }
+                
+                return
             }
         }
         

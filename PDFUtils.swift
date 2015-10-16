@@ -20,24 +20,27 @@ func numPDFPages(pdfFile : NSURL) -> Int {
 // http://stackoverflow.com/questions/11592313/how-do-i-save-a-uiimage-to-a-file
 //
 func makeOrGetThumbnail(deckPath: NSURL) -> UIImage {
-    let slidePath = deckPath.URLByAppendingPathComponent("slides.pdf")
-    return makeThumbnail(slidePath)
-//    let thumbnailPath = deckPath.URLByAppendingPathComponent("thumbnail.jpg")
-//    if NSFileManager.defaultManager().fileExistsAtPath(thumbnailPath.path!) {
-//        print("Restoring thumbnail", thumbnailPath)
-//        let thumbnailImage = UIImage(named: thumbnailPath.path!)
-//        print("image=", thumbnailImage)
-//        return thumbnailImage!
-//    } else {
-//        let slidePath = deckPath.URLByAppendingPathComponent("slides.pdf")
-//        let thumbnailImage : UIImage = makeThumbnail(slidePath)
-//        let pngImage : NSData = UIImageJPEGRepresentation(thumbnailImage, 0.8)!
-//        pngImage.writeToFile(thumbnailPath.path!, atomically: true)
-//        print("Creating thumbnail, storing at", thumbnailPath)
-//        return thumbnailImage
-//    }
+//    let slidePath = deckPath.URLByAppendingPathComponent("slides.pdf")
+//    return makeThumbnail(slidePath)
+    let thumbnailPath = deckPath.URLByAppendingPathComponent("thumbnail.jpg")
+    if NSFileManager.defaultManager().fileExistsAtPath(thumbnailPath.path!) {
+        print("Restoring thumbnail", thumbnailPath)
+        let thumbnailImage = UIImage(contentsOfFile: thumbnailPath.path!)
+        print("image=", thumbnailImage)
+        return thumbnailImage!
+    } else {
+        let slidePath = deckPath.URLByAppendingPathComponent("slides.pdf")
+        let thumbnailImage : UIImage = makeThumbnail(slidePath)
+        let pngImage : NSData = UIImageJPEGRepresentation(thumbnailImage, 0.8)!
+        pngImage.writeToFile(thumbnailPath.path!, atomically: true)
+        print("Creating thumbnail, storing at", thumbnailPath)
+        return thumbnailImage
+    }
 }
 
+//
+// http://stackoverflow.com/questions/4107850/how-can-i-programatically-generate-a-thumbnail-of-a-pdf-with-the-iphone-sdk
+//
 func makeThumbnail(pdfFile: NSURL) -> UIImage {
     let pdf : CGPDFDocument = CGPDFDocumentCreateWithURL(pdfFile)!
     let border : UIColor = PDFBorder(pdf, pageNumber: 1)
@@ -199,7 +202,7 @@ func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
                 let g = linstep(alpha, a: CGFloat(1.0), b: CGFloat(bdat[1])/CGFloat(255))
                 let b = linstep(alpha, a: CGFloat(1.0), b: CGFloat(bdat[2])/CGFloat(255))
                 
-                let w = CGFloat(1.0)/CGFloat(sqrt(Float((r-medianR)*(r-medianR)+(g-medianG)*(g-medianG)+(b-medianB)*(b-medianB)))+1e-6)
+                let w = CGFloat(1.0)/CGFloat(sqrt(Float((r-medianR)*(r-medianR)+(g-medianG)*(g-medianG)+(b-medianB)*(b-medianB)))+1e-10)
                 
                 x.tr = x0.tr+w*r
                 x.tg = x0.tg+w*g
