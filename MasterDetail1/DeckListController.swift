@@ -23,7 +23,6 @@ class DeckListController: UITableViewController {
             self.clearsSelectionOnViewWillAppear = false
             self.preferredContentSize = CGSize(width: 320.0, height: 600.0)
         }
-//        self.title = "Slide Decks"
     }
 
     override func viewDidLoad() {
@@ -35,16 +34,10 @@ class DeckListController: UITableViewController {
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? SlideDeckController
         }
-        
+
         // Set up list of slide decks by enumerating contents
         // of Decks directory
         let filemgr = NSFileManager.defaultManager()
-//        let paths = filemgr.URLsForDirectory(
-//            NSSearchPathDirectory.DocumentDirectory,
-//            inDomains: NSSearchPathDomainMask.UserDomainMask)
-//        
-//        // Get user documents directory
-//        let documentsDirectory = paths[0] // docsdir func needed
         do {
             let decksRoot : NSURL = documentsDirectory.URLByAppendingPathComponent("Decks")
             let directoryContents = try filemgr.contentsOfDirectoryAtPath(decksRoot.path!)
@@ -56,9 +49,11 @@ class DeckListController: UITableViewController {
                 }
             }
         } catch {
-            print("Couldn't list directory")
         }
  
+        
+        setUpExamples()
+        setUpDocumentation()
         NSNotificationCenter.defaultCenter().addObserver(self, selector:"didEnterBackground",
             name: UIApplicationDidEnterBackgroundNotification,
             object: nil)
@@ -66,7 +61,6 @@ class DeckListController: UITableViewController {
     }
 
     func didEnterBackground() {
-        print("Bye!")
         self.presentedViewController?.dismissViewControllerAnimated(false, completion: nil)
         
     }
@@ -125,7 +119,8 @@ class DeckListController: UITableViewController {
         cell.textLabel!.text = slideRootDir.lastPathComponent!+" ("+String(numPages/2)+")" //description)
         
         // http://stackoverflow.com/questions/4107850/how-can-i-programatically-generate-a-thumbnail-of-a-pdf-with-the-iphone-sdk
-        cell.imageView?.image = makeThumbnail(slideRootDir.URLByAppendingPathComponent("slides.pdf"))
+        cell.imageView?.image = makeOrGetThumbnail(slideRootDir)
+                
         return cell
     }
 
@@ -140,16 +135,14 @@ class DeckListController: UITableViewController {
             do {
                 try NSFileManager.defaultManager().removeItemAtURL(slideRootDir)
             } catch {
-                print("Failed")
                 let window = UIApplication.sharedApplication().keyWindow
                 if window?.rootViewController?.presentedViewController == nil {
                     let alertController = UIAlertController(title: "Problem", message: "Unable to delete slide deck.", preferredStyle: .Alert)
                     
-                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in print("ok") }
+                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in }
                     alertController.addAction(OKAction)
                     
                     window?.rootViewController?.presentViewController(alertController, animated: true) {
-                        print("what?")
                     }
                 }
             }
@@ -169,7 +162,7 @@ class DeckListController: UITableViewController {
                     message: "Need 2 or more pages to make flash cards.",
                     preferredStyle: .Alert)
                 
-                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in print("ok") }
+                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in }
                 alertController.addAction(OKAction)
                 
                 window!.rootViewController?.presentViewController(alertController, animated: true) {
@@ -184,16 +177,11 @@ class DeckListController: UITableViewController {
             return
         }
         
-//        let documentsDirectory = filemgr.URLsForDirectory(
-//            NSSearchPathDirectory.DocumentDirectory,
-//            inDomains: NSSearchPathDomainMask.UserDomainMask)[0]
-        
         let destDir : NSURL = documentsDirectory.URLByAppendingPathComponent("Decks")
             .URLByAppendingPathComponent(url.lastPathComponent!)
             .URLByDeletingPathExtension!
         
         
-        print("Hello1")
         var updatingDeck : Bool = false
         // Create that directory
         if (filemgr.fileExistsAtPath(destDir.path!)) {
@@ -201,11 +189,9 @@ class DeckListController: UITableViewController {
         } else {
             do {
                 try filemgr.createDirectoryAtPath(destDir.path!, withIntermediateDirectories: true, attributes: nil)
-                print("Created directory at", destDir)
             } catch {
                 // It must already exist
                 // Though we already tested this and it shouldn't happen.
-                print("Already exists!")
                 updatingDeck = true
             }
         }
@@ -217,7 +203,6 @@ class DeckListController: UITableViewController {
             do {
                 try filemgr.removeItemAtURL(pdfPath)
             } catch {
-                print("Couldn't remove item from", pdfPath)
             }
         }
         // Move slides from Inbox to new destination
@@ -228,41 +213,32 @@ class DeckListController: UITableViewController {
             } else {
                 try filemgr.copyItemAtURL(url, toURL:pdfPath)
             }
-            print("Hello2", addingToList)
             
             if addingToList {
                 let masterController = self // XXX
                 
                 // Tell master controller about root directory for card deck
                 if !updatingDeck {
-                    print("Hello3")
                     masterController.insertNewSlides(destDir)
                 } else {
-                    print("Hello4")
                     masterController.reload()
                 }
             }
-            print("Hello5")
         } catch {
-            print("Failed")
             let window = UIApplication.sharedApplication().keyWindow
             if window!.rootViewController?.presentedViewController == nil {
                 let alertController = UIAlertController(title: "Problem",
                     message: "Unable to copy PDF slides.",
                     preferredStyle: .Alert)
                 
-                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in print("ok") }
+                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in }
                 alertController.addAction(OKAction)
                 
                 window!.rootViewController?.presentViewController(alertController, animated: true) {
-                    print("what?")
                 }
             }
         }
         
-        // Do I need to release this document?
-//        let pdfDocument = CGPDFDocumentCreateWithURL(pdfPath)
-//        let numPages : Int = CGPDFDocumentGetNumberOfPages(pdfDocument)
         let numCards = numPages/2
         let destCards = destDir.URLByAppendingPathComponent("deck.dat")
         
@@ -275,6 +251,67 @@ class DeckListController: UITableViewController {
             deck.start()
         }
         NSKeyedArchiver.archiveRootObject(deck, toFile: destCards.path!)
+    }
+
+    @IBAction func doMenu(sender: UIBarButtonItem) {
+        let window = UIApplication.sharedApplication().keyWindow
+        if window?.rootViewController?.presentedViewController == nil {
+            let alertController = UIAlertController(title: "Menu",
+                message: "What do you want to do?",
+                preferredStyle: .ActionSheet)
+            
+            for (title, action, style) in [
+                ("Reinstall documentation", self.reinstallDocs, UIAlertActionStyle.Default),
+                ("Reinstall example", self.reinstallExamples, UIAlertActionStyle.Default),
+                ("Cancel", {() -> Void in  }, .Cancel)] {
+                    let item = UIAlertAction(title: title, style: style) {
+                        (_) in
+                        action()
+                    }
+                    alertController.addAction(item)
+                    
+            }
+            
+            // Slight behaviour difference on iPad
+            if let controller = alertController.popoverPresentationController {
+                controller.barButtonItem = sender
+            }
+            
+            window?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
+        }
+
+    }
+    
+    func reinstallDocs() -> Void {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setBool(false, forKey: "docsInstalled")
+        setUpDocumentation()
+    }
+    
+    func reinstallExamples() -> Void {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setBool(false, forKey: "examplesInstalled")
+        setUpExamples()
+    }
+    
+    func setUpDocumentation() {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if !defaults.boolForKey("docsInstalled") {
+            let path = NSBundle.mainBundle().pathForResource("ActiveRecall", ofType:"pdf")
+            let url = NSURL.fileURLWithPath(path!)
+            setUpSlideDeck(openURL: url, moving:false, addingToList:true)
+            defaults.setBool(true, forKey: "docsInstalled")
+        }
+    }
+    
+    func setUpExamples() {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if !defaults.boolForKey("examplesInstalled") {
+            let path = NSBundle.mainBundle().pathForResource("Flags", ofType:"pdf")
+            let url = NSURL.fileURLWithPath(path!)
+            setUpSlideDeck(openURL: url, moving:false, addingToList:true)
+            defaults.setBool(true, forKey: "examplesInstalled")
+        }
     }
 
 }

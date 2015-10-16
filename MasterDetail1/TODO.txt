@@ -5,12 +5,10 @@ TODO
 18. Consider caching border colours
 21. Some animation
 23. Rename classes internally
-28. Examples
 32. Start in master? See http://stackoverflow.com/questions/25875618/uisplitviewcontroller-in-portrait-on-iphone-shows-detail-vc-instead-of-master
 34. Maybe cache thumbnails
-40. Test one card deck
-42. Persistent preference state, eg. whether deck is reversed.
-43. Call "reverse" "flipped"?"
+42. Persistent preference state, eg. whether deck is flipped.
+44. Stop calling them "slides"!
 
 DONE
 ====
@@ -51,3 +49,7 @@ DONE
 40. Refactor border colour computation
 39. Deal with one page PDFs
 41. Shuffle should always change top card
+40. Test one card deck
+28. Examples
+45. Built in example
+43. Call "reverse" "flipped"?"

@@ -60,7 +60,6 @@ class SlideDeckController : UIViewController {
     }
     
     func didEnterBackground() {
-        print("Bye!")
         self.presentedViewController?.dismissViewControllerAnimated(false, completion: nil)
 
     }
@@ -90,7 +89,7 @@ class SlideDeckController : UIViewController {
             
             for (title, action, style) in [("Reset", self.doReset, UIAlertActionStyle.Default),
                                            ("Shuffle", self.doShuffle, .Default),
-                                           ("Reverse", self.doReverse, .Default),
+                                           ("Flip", self.doReverse, .Default),
                                            ("Cancel", {() -> Void in  }, .Cancel)] {
                 let resetAction = UIAlertAction(title: title, style: style) {
                     (_) in
@@ -105,7 +104,7 @@ class SlideDeckController : UIViewController {
                 controller.barButtonItem = sender
             }
             
-            window?.rootViewController?.presentViewController(alertController, animated: false, completion: nil)
+            window?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
         }
     }
 

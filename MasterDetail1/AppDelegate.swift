@@ -17,13 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     var slideListController: DeckListController! = nil
 
     
-    func setUpDocumentation() {
-        // Set up documentation?
-        let path = NSBundle.mainBundle().pathForResource("ActiveRecall", ofType:"pdf")
-        let url = NSURL.fileURLWithPath(path!)
-        slideListController.setUpSlideDeck(openURL: url, moving:false, addingToList:false)
-    }
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         let splitViewController = self.window!.rootViewController as! UISplitViewController
 //        splitViewController.presentsWithGesture = true
@@ -35,9 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         let navController = splitViewController.viewControllers[0] as! UINavigationController
         slideListController = navController.topViewController as! DeckListController
-        slideListController.title = "Slide Decks"
-        
-        setUpDocumentation()
+        slideListController.title = "Card Decks"
         return true
     }
     
