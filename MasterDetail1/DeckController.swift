@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SlideDeckController : UIViewController {
+class DeckController : UIViewController {
 
     @IBOutlet weak var pdfView: PDFView!
     var displayingFront : Bool = true

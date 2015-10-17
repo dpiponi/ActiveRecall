@@ -13,7 +13,7 @@ import UIKit
 
 class DeckListController: UITableViewController {
 
-    var detailViewController: SlideDeckController? = nil
+    var detailViewController: DeckController? = nil
     var slideRootDirs = [NSURL]()
 
 
@@ -32,7 +32,7 @@ class DeckListController: UITableViewController {
         
         if let split = self.splitViewController {
             let controllers = split.viewControllers
-            self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? SlideDeckController
+            self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DeckController
         }
 
         // Set up list of slide decks by enumerating contents
@@ -87,7 +87,7 @@ class DeckListController: UITableViewController {
         if segue.identifier == "showDetail" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let slideRootDir = slideRootDirs[indexPath.row]
-                let detailController = (segue.destinationViewController as! UINavigationController).topViewController as! SlideDeckController
+                let detailController = (segue.destinationViewController as! UINavigationController).topViewController as! DeckController
                 detailController.slideRootDir = slideRootDir
                 detailController.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
 

@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         let splitViewController = self.window!.rootViewController as! UISplitViewController
-//        splitViewController.presentsWithGesture = true
+        splitViewController.presentsWithGesture = false
         let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
 
         let barButton = splitViewController.displayModeButtonItem()
@@ -60,7 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController, ontoPrimaryViewController primaryViewController:UIViewController) -> Bool {
         if let secondaryAsNavController = secondaryViewController as? UINavigationController {
-            if let topAsDetailController = secondaryAsNavController.topViewController as? SlideDeckController {
+            if let topAsDetailController = secondaryAsNavController.topViewController as? DeckController {
                 if topAsDetailController.slideRootDir == nil {
                     // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
                     return true
