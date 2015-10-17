@@ -3,7 +3,7 @@ import Darwin
 
 class Deck : NSObject, NSCoding {
     var numCards : Int
-    var initCardLevel : Int = 8
+    var initCardLevel : Int = 6
     var cardIndices : [Int]
     var cardLevels : [Int]
     var history : [Int] = [Int]()
