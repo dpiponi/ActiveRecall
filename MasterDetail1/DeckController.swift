@@ -70,7 +70,7 @@ class DeckController : UIViewController {
     
     func withDeck(f : (Deck -> Void)) {
         if deckRootDir != nil {
-            let deckURL : NSURL = deckRootDir!.URLByAppendingPathComponent("deck.dat")
+            let deckURL : NSURL = deckDatURL(deckRootDir!)
             if NSFileManager.defaultManager().fileExistsAtPath(deckURL.path!) {
                 let deck = NSKeyedUnarchiver.unarchiveObjectWithFile(deckURL.path!) as! Deck
                 f(deck)
@@ -115,11 +115,11 @@ class DeckController : UIViewController {
         withDeck {
             (deck) -> Void in
             let loc = recognizer.locationInView(self.pdfView)
-            let slideWidth : CGFloat = self.pdfView.frame.size.width
-            if loc.x > 2*slideWidth/3 {
+            let cardWidth : CGFloat = self.pdfView.frame.size.width
+            if loc.x > 2*cardWidth/3 {
                 deck.correct()
                 self.displayingFront = true
-            } else if loc.x < slideWidth/3 {
+            } else if loc.x < cardWidth/3 {
                 deck.incorrect()
                 self.displayingFront = true
             } else {

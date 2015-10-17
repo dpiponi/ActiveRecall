@@ -27,9 +27,8 @@ func makeOrGetThumbnail(deckPath: NSURL) -> UIImage {
         print("image=", thumbnailImage)
         return thumbnailImage!
     } else {
-//        let slidePath = deckPath.URLByAppendingPathComponent("slides.pdf")
-        let slidePath = deckPDFURL(deckPath)
-        let thumbnailImage : UIImage = makeThumbnail(slidePath)
+        let deckPath = deckPDFURL(deckPath)
+        let thumbnailImage : UIImage = makeThumbnail(deckPath)
         let pngImage : NSData = UIImageJPEGRepresentation(thumbnailImage, 0.8)!
         pngImage.writeToFile(thumbnailPath.path!, atomically: true)
         print("Creating thumbnail, storing at", thumbnailPath)
@@ -166,7 +165,7 @@ func linstep<X:Num>(lambda: X, a: X, b: X) -> X {
     return (X(1)-lambda)*a+lambda*b
 }
 
-// Pick colour for border around slide.
+// Pick colour for border around deck.
 func PDFBorder(document: CGPDFDocument, pageNumber: Int) -> UIColor {
     let page = CGPDFDocumentGetPage(document, pageNumber)
     let pageRect = CGPDFPageGetBoxRect(page, .MediaBox)

@@ -35,14 +35,14 @@ class DeckListController: UITableViewController {
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DeckController
         }
 
-        // Set up list of slide decks by enumerating contents
+        // Set up list of card decks by enumerating contents
         // of Decks directory
         let filemgr = NSFileManager.defaultManager()
         do {
             let decksRoot : NSURL = documentsDirectory.URLByAppendingPathComponent("Decks")
             let directoryContents = try filemgr.contentsOfDirectoryAtPath(decksRoot.path!)
             for deckName in directoryContents {
-                if deckName[deckName.startIndex] != "." { // XXX Insert new slides !!!
+                if deckName[deckName.startIndex] != "." { // XXX Insert new deck !!!
                     deckRootDirs.insert(decksRoot.URLByAppendingPathComponent(deckName), atIndex: 0)
                     let indexPath = NSIndexPath(forRow: 0, inSection: 0)
                     self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
@@ -72,7 +72,6 @@ class DeckListController: UITableViewController {
     
     // This is where "Open in..." dialogue is completed by adding a new menu
     // entry.
-    // The path is the root of the slide deck directory
     func insertNewDeck(rootDeckPath: NSURL) {
         deckRootDirs.insert(rootDeckPath, atIndex: 0)
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
@@ -143,7 +142,7 @@ class DeckListController: UITableViewController {
             } catch {
                 let window = UIApplication.sharedApplication().keyWindow
                 if window?.rootViewController?.presentedViewController == nil {
-                    let alertController = UIAlertController(title: "Problem", message: "Unable to delete slide deck.", preferredStyle: .Alert)
+                    let alertController = UIAlertController(title: "Problem", message: "Unable to delete card deck.", preferredStyle: .Alert)
                     
                     let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in }
                     alertController.addAction(OKAction)
@@ -202,7 +201,6 @@ class DeckListController: UITableViewController {
             }
         }
         
-        // Get path of slides within that directory
         let pdfPath = deckPDFURL(destDir)
         
         if updatingDeck {
@@ -211,7 +209,7 @@ class DeckListController: UITableViewController {
             } catch {
             }
         }
-        // Move slides from Inbox to new destination
+        // Move deck from Inbox to new destination
         do {
             //
             if moving {
@@ -234,7 +232,7 @@ class DeckListController: UITableViewController {
             let window = UIApplication.sharedApplication().keyWindow
             if window!.rootViewController?.presentedViewController == nil {
                 let alertController = UIAlertController(title: "Problem",
-                    message: "Unable to copy PDF slides.",
+                    message: "Unable to copy PDF deck.",
                     preferredStyle: .Alert)
                 
                 let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in }
@@ -248,7 +246,7 @@ class DeckListController: UITableViewController {
         }
         
         let numCards = numPages/2
-        let destCards = destDir.URLByAppendingPathComponent("deck.dat")
+        let destCards = deckDatURL(destDir)
         
         var deck : Deck!
         if updatingDeck {
