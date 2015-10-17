@@ -14,7 +14,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
     var window: UIWindow?
-    var slideListController: DeckListController! = nil
+    var deckListController: DeckListController! = nil
 
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -27,15 +27,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         splitViewController.delegate = self
         
         let navController = splitViewController.viewControllers[0] as! UINavigationController
-        slideListController = navController.topViewController as! DeckListController
-        slideListController.title = "Card Decks"
+        deckListController = navController.topViewController as! DeckListController
+        deckListController.title = "Card Decks"
         return true
     }
     
     // This is what's done when "Open in..." dialogue is completed.
     func application(application: UIApplication, openURL url: NSURL,
                      sourceApplication: String?, annotation: AnyObject)-> Bool {
-            slideListController.setUpSlideDeck(openURL: url, moving: true, addingToList:true)
+            deckListController.setUpSlideDeck(openURL: url, moving: true, addingToList:true)
 
         return true
     }
