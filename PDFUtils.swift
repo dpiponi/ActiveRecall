@@ -20,8 +20,6 @@ func numPDFPages(pdfFile : NSURL) -> Int {
 // http://stackoverflow.com/questions/11592313/how-do-i-save-a-uiimage-to-a-file
 //
 func makeOrGetThumbnail(deckPath: NSURL) -> UIImage {
-//    let slidePath = deckPath.URLByAppendingPathComponent("slides.pdf")
-//    return makeThumbnail(slidePath)
     let thumbnailPath = deckPath.URLByAppendingPathComponent("thumbnail.jpg")
     if NSFileManager.defaultManager().fileExistsAtPath(thumbnailPath.path!) {
         print("Restoring thumbnail", thumbnailPath)
@@ -29,7 +27,8 @@ func makeOrGetThumbnail(deckPath: NSURL) -> UIImage {
         print("image=", thumbnailImage)
         return thumbnailImage!
     } else {
-        let slidePath = deckPath.URLByAppendingPathComponent("slides.pdf")
+//        let slidePath = deckPath.URLByAppendingPathComponent("slides.pdf")
+        let slidePath = deckPDFURL(deckPath)
         let thumbnailImage : UIImage = makeThumbnail(slidePath)
         let pngImage : NSData = UIImageJPEGRepresentation(thumbnailImage, 0.8)!
         pngImage.writeToFile(thumbnailPath.path!, atomically: true)

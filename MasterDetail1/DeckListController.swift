@@ -113,7 +113,7 @@ class DeckListController: UITableViewController {
 
         let deckRootDir = deckRootDirs[indexPath.row]
         print(deckRootDir)
-        let doc : CGPDFDocument = CGPDFDocumentCreateWithURL(deckRootDir.URLByAppendingPathComponent("slides.pdf"))!
+        let doc : CGPDFDocument = CGPDFDocumentCreateWithURL(deckPDFURL(deckRootDir))!
         let numPages : Int = CGPDFDocumentGetNumberOfPages(doc)
         
         cell.textLabel!.text = nil
@@ -203,7 +203,7 @@ class DeckListController: UITableViewController {
         }
         
         // Get path of slides within that directory
-        let pdfPath = destDir.URLByAppendingPathComponent("slides.pdf")
+        let pdfPath = deckPDFURL(destDir)
         
         if updatingDeck {
             do {
