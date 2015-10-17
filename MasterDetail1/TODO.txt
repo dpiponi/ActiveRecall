@@ -5,7 +5,6 @@ TODO
 18. Consider caching border colours
 21. Some animation
 32. Start in master? See http://stackoverflow.com/questions/25875618/uisplitviewcontroller-in-portrait-on-iphone-shows-detail-vc-instead-of-master
-42. Persistent preference state, eg. whether deck is flipped.
 47. Consider clearing deck view when deck deleted.
 
 DONE
@@ -56,3 +55,4 @@ DONE
 46. Why don't thumbnails work?
 44. Stop calling them "slides"!
 23. Rename classes internally
+42. Persistent preference state, eg. whether deck is flipped.

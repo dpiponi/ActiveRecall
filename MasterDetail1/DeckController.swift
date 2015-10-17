@@ -12,10 +12,10 @@ class DeckController : UIViewController {
 
     @IBOutlet weak var pdfView: PDFView!
     var displayingFront : Bool = true
-    var shouldDisplayFront : Bool = true
+//    var shouldDisplayFront : Bool = true
     
     func pageNumberFromDeck(deck : Deck)  -> Int {
-        let n = 1+2*deck.cardIndices[0]+(self.displayingFront == self.shouldDisplayFront ? 0 : 1)
+        let n = 1+2*deck.cardIndices[0]+(self.displayingFront != deck.flipped ? 0 : 1)
         return n
     }
     
@@ -155,7 +155,7 @@ class DeckController : UIViewController {
     func doReverse() -> Void {
         withDeck {
             (deck) -> Void in
-            self.shouldDisplayFront = !self.shouldDisplayFront
+            deck.flipped = !deck.flipped
         }
     }
     

@@ -11,6 +11,7 @@ class Deck : NSObject, NSCoding {
     let historyLength : Int = 16
     let multiplier : Int = 3
     let wrongLevel : Int = 6
+    var flipped = false
     
     init(numCards n: Int, initCardLevel level: Int) {
         numCards = n
@@ -72,19 +73,25 @@ class Deck : NSObject, NSCoding {
         } else {
             self.levelHistory = [Int]()
         }
+        if version >= 3 {
+            self.flipped = decoder.decodeBoolForKey("flipped")
+        } else {
+            self.flipped = false
+        }
         
         assert(cardIndices.count == numCards)
         assert(cardLevels.count == numCards)
 
     }
     func encodeWithCoder(coder: NSCoder) {
-        coder.encodeInt(2, forKey:"version")
+        coder.encodeInt(3, forKey:"version")
         coder.encodeInt(Int32(self.numCards), forKey:"numCards")
         coder.encodeInt(Int32(self.initCardLevel), forKey:"initCardLevel")
         coder.encodeObject(self.cardIndices, forKey:"cardIndices")
         coder.encodeObject(self.cardLevels, forKey:"cardLevels")
         coder.encodeObject(self.history, forKey:"history")
         coder.encodeObject(self.levelHistory, forKey:"levelHistory")
+        coder.encodeBool(self.flipped, forKey: "flipped")
     }
     func trimHistory() {
         if history.count > historyLength {
