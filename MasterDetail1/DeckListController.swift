@@ -73,8 +73,8 @@ class DeckListController: UITableViewController {
     // This is where "Open in..." dialogue is completed by adding a new menu
     // entry.
     // The path is the root of the slide deck directory
-    func insertNewSlides(rootSlidePath: NSURL) {
-        deckRootDirs.insert(rootSlidePath, atIndex: 0)
+    func insertNewSlides(rootDeckPath: NSURL) {
+        deckRootDirs.insert(rootDeckPath, atIndex: 0)
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
         self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
