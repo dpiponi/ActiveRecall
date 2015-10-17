@@ -14,7 +14,7 @@ import UIKit
 class DeckListController: UITableViewController {
 
     var detailViewController: DeckController? = nil
-    var slideRootDirs = [NSURL]()
+    var deckRootDirs = [NSURL]()
 
 
     override func awakeFromNib() {
@@ -43,7 +43,7 @@ class DeckListController: UITableViewController {
             let directoryContents = try filemgr.contentsOfDirectoryAtPath(decksRoot.path!)
             for deckName in directoryContents {
                 if deckName[deckName.startIndex] != "." { // XXX Insert new slides !!!
-                    slideRootDirs.insert(decksRoot.URLByAppendingPathComponent(deckName), atIndex: 0)
+                    deckRootDirs.insert(decksRoot.URLByAppendingPathComponent(deckName), atIndex: 0)
                     let indexPath = NSIndexPath(forRow: 0, inSection: 0)
                     self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
                 }
@@ -74,7 +74,7 @@ class DeckListController: UITableViewController {
     // entry.
     // The path is the root of the slide deck directory
     func insertNewSlides(rootSlidePath: NSURL) {
-        slideRootDirs.insert(rootSlidePath, atIndex: 0)
+        deckRootDirs.insert(rootSlidePath, atIndex: 0)
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
         self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
@@ -86,15 +86,15 @@ class DeckListController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetail" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                let slideRootDir = slideRootDirs[indexPath.row]
+                let deckRootDir = deckRootDirs[indexPath.row]
                 let detailController = (segue.destinationViewController as! UINavigationController).topViewController as! DeckController
-                detailController.slideRootDir = slideRootDir
+                detailController.deckRootDir = deckRootDir
                 detailController.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
 
                 // http://stackoverflow.com/questions/9273204/can-you-add-buttons-to-navigation-bars-through-storyboard
                 
                 detailController.navigationItem.leftItemsSupplementBackButton = true
-                detailController.navigationItem.title = slideRootDir.lastPathComponent
+                detailController.navigationItem.title = deckRootDir.lastPathComponent
             }
         }
     }
@@ -105,27 +105,27 @@ class DeckListController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return slideRootDirs.count
+        return deckRootDirs.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) 
 
-        let slideRootDir = slideRootDirs[indexPath.row]
-        print(slideRootDir)
-        let doc : CGPDFDocument = CGPDFDocumentCreateWithURL(slideRootDir.URLByAppendingPathComponent("slides.pdf"))!
+        let deckRootDir = deckRootDirs[indexPath.row]
+        print(deckRootDir)
+        let doc : CGPDFDocument = CGPDFDocumentCreateWithURL(deckRootDir.URLByAppendingPathComponent("slides.pdf"))!
         let numPages : Int = CGPDFDocumentGetNumberOfPages(doc)
         
         cell.textLabel!.text = nil
         cell.imageView!.image = nil
         
-        cell.textLabel!.text = slideRootDir.lastPathComponent!+" ("+String(numPages/2)+")" //description)
+        cell.textLabel!.text = deckRootDir.lastPathComponent!+" ("+String(numPages/2)+")" //description)
         
-        let thumbNail = makeOrGetThumbnail(slideRootDir)
+        let thumbNail = makeOrGetThumbnail(deckRootDir)
         print("into table:", thumbNail)
         cell.imageView!.image = thumbNail
         
-        print(cell.textLabel!.text, slideRootDir)
+        print(cell.textLabel!.text, deckRootDir)
                 
         return cell
     }
@@ -137,9 +137,9 @@ class DeckListController: UITableViewController {
 
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            let slideRootDir = slideRootDirs[indexPath.row]
+            let deckRootDir = deckRootDirs[indexPath.row]
             do {
-                try NSFileManager.defaultManager().removeItemAtURL(slideRootDir)
+                try NSFileManager.defaultManager().removeItemAtURL(deckRootDir)
             } catch {
                 let window = UIApplication.sharedApplication().keyWindow
                 if window?.rootViewController?.presentedViewController == nil {
@@ -152,7 +152,7 @@ class DeckListController: UITableViewController {
                     }
                 }
             }
-            slideRootDirs.removeAtIndex(indexPath.row)
+            deckRootDirs.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
     }

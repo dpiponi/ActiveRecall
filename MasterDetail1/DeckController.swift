@@ -27,7 +27,7 @@ class DeckController : UIViewController {
         pdfView.setPDF(url)
     }
     
-    var slideRootDir: NSURL? {
+    var deckRootDir: NSURL? {
         didSet {
             // Update the view.
             self.configureView()
@@ -42,10 +42,10 @@ class DeckController : UIViewController {
         
         self.configureView()
         
-        if let slideRootDir: NSURL = self.slideRootDir {
-            let slidesPath = slideRootDir.URLByAppendingPathComponent("slides.pdf")
+        if let deckRootDir: NSURL = self.deckRootDir {
+            let slidesPath = deckRootDir.URLByAppendingPathComponent("slides.pdf")
             pdfView.setPDF(slidesPath)
-            let deckURL : NSURL = slideRootDir.URLByAppendingPathComponent("deck.dat")
+            let deckURL : NSURL = deckRootDir.URLByAppendingPathComponent("deck.dat")
             let deck = NSKeyedUnarchiver.unarchiveObjectWithFile(deckURL.path!) as! Deck
             setPage(deck)
         }
@@ -69,8 +69,8 @@ class DeckController : UIViewController {
     }
     
     func withDeck(f : (Deck -> Void)) {
-        if slideRootDir != nil {
-            let deckURL : NSURL = slideRootDir!.URLByAppendingPathComponent("deck.dat")
+        if deckRootDir != nil {
+            let deckURL : NSURL = deckRootDir!.URLByAppendingPathComponent("deck.dat")
             if NSFileManager.defaultManager().fileExistsAtPath(deckURL.path!) {
                 let deck = NSKeyedUnarchiver.unarchiveObjectWithFile(deckURL.path!) as! Deck
                 f(deck)
@@ -110,7 +110,7 @@ class DeckController : UIViewController {
 
     // Handle user tap
     @IBAction func tapHandler(recognizer:UITapGestureRecognizer) {
-        guard slideRootDir != nil else { return }
+        guard deckRootDir != nil else { return }
   
         withDeck {
             (deck) -> Void in
