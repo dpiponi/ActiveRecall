@@ -7,3 +7,5 @@ This is a minimal flashcard app for iOS. It uses PDF for input. Pages 1 and 2 gi
 ActiveRecall doesn't build slide decks. You must provide PDFs from somewhere. For example go to the Civics Flash Cards link above and use "Open in...".
 
 It uses a simple strategy to present cards you don't know more often. Tap on the left of a card to say you don't know it well and it gets put back in the deck near the top. If you think you do know a card tap on the right and it'll get put in the deck further down. Each time you revisit a card and tap on the right it'll get put back further down the deck. Compare with the [Leitner system](https://en.wikipedia.org/wiki/Leitner_system).
+
+![Screen shot](https://raw.github.com/dpiponi/ActiveRecall/master/screenshot.png)
