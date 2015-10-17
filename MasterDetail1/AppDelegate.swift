@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     // This is what's done when "Open in..." dialogue is completed.
     func application(application: UIApplication, openURL url: NSURL,
                      sourceApplication: String?, annotation: AnyObject)-> Bool {
-            deckListController.setUpSlideDeck(openURL: url, moving: true, addingToList:true)
+            deckListController.setUpDeck(openURL: url, moving: true, addingToList:true)
 
         return true
     }

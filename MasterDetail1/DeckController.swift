@@ -43,8 +43,8 @@ class DeckController : UIViewController {
         self.configureView()
         
         if let deckRootDir: NSURL = self.deckRootDir {
-            let slidesPath = deckRootDir.URLByAppendingPathComponent("slides.pdf")
-            pdfView.setPDF(slidesPath)
+            let deckPath = deckRootDir.URLByAppendingPathComponent("slides.pdf")
+            pdfView.setPDF(deckPath)
             let deckURL : NSURL = deckRootDir.URLByAppendingPathComponent("deck.dat")
             let deck = NSKeyedUnarchiver.unarchiveObjectWithFile(deckURL.path!) as! Deck
             setPage(deck)

@@ -73,7 +73,7 @@ class DeckListController: UITableViewController {
     // This is where "Open in..." dialogue is completed by adding a new menu
     // entry.
     // The path is the root of the slide deck directory
-    func insertNewSlides(rootDeckPath: NSURL) {
+    func insertNewDeck(rootDeckPath: NSURL) {
         deckRootDirs.insert(rootDeckPath, atIndex: 0)
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
         self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
@@ -157,7 +157,7 @@ class DeckListController: UITableViewController {
         }
     }
     
-    func setUpSlideDeck(openURL url: NSURL, moving: Bool, addingToList: Bool) {
+    func setUpDeck(openURL url: NSURL, moving: Bool, addingToList: Bool) {
         let filemgr = NSFileManager.defaultManager()
         
         let numPages : Int = numPDFPages(url)
@@ -225,7 +225,7 @@ class DeckListController: UITableViewController {
                 
                 // Tell master controller about root directory for card deck
                 if !updatingDeck {
-                    masterController.insertNewSlides(destDir)
+                    masterController.insertNewDeck(destDir)
                 } else {
                     masterController.reload()
                 }
@@ -307,7 +307,7 @@ class DeckListController: UITableViewController {
         if !defaults.boolForKey("docsInstalled") {
             let path = NSBundle.mainBundle().pathForResource("ActiveRecall", ofType:"pdf")
             let url = NSURL.fileURLWithPath(path!)
-            setUpSlideDeck(openURL: url, moving:false, addingToList:true)
+            setUpDeck(openURL: url, moving:false, addingToList:true)
             defaults.setBool(true, forKey: "docsInstalled")
         }
     }
@@ -317,7 +317,7 @@ class DeckListController: UITableViewController {
         if !defaults.boolForKey("examplesInstalled") {
             let path = NSBundle.mainBundle().pathForResource("Flags", ofType:"pdf")
             let url = NSURL.fileURLWithPath(path!)
-            setUpSlideDeck(openURL: url, moving:false, addingToList:true)
+            setUpDeck(openURL: url, moving:false, addingToList:true)
             defaults.setBool(true, forKey: "examplesInstalled")
         }
     }
