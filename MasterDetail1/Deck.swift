@@ -1,6 +1,9 @@
 import Foundation
 import Darwin
 
+//
+// Deck state. This comment should be deleted.
+//
 class Deck : NSObject, NSCoding {
     var numCards : Int
     var initCardLevel : Int = 6
@@ -48,7 +51,7 @@ class Deck : NSObject, NSCoding {
         }
         history = [Int]()
         levelHistory = [Int]()
-        flipped = false 
+        flipped = false
     }
     func dump() {
         print("cards = ", cardIndices)
