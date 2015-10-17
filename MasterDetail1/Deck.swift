@@ -48,7 +48,7 @@ class Deck : NSObject, NSCoding {
         }
         history = [Int]()
         levelHistory = [Int]()
-        flipped = false
+        flipped = false 
     }
     func dump() {
         print("cards = ", cardIndices)
