@@ -9,6 +9,8 @@ class Deck : NSObject, NSCoding {
     var history : [Int] = [Int]()
     var levelHistory : [Int] = [Int]()
     let historyLength : Int = 16
+    let multiplier : Int = 3
+    let wrongLevel : Int = 6
     
     init(numCards n: Int, initCardLevel level: Int) {
         numCards = n
@@ -109,14 +111,14 @@ class Deck : NSObject, NSCoding {
         levelHistory.insert(cardLevels[currentCard], atIndex: 0)
         trimHistory()
         if cardLevels[currentCard] < numCards {
-            cardLevels[currentCard] *= 2
+            cardLevels[currentCard] *= multiplier
         }
     }
     func incorrect() {
         let currentCard : Int = cardIndices.removeAtIndex(0)
         
         levelHistory.insert(cardLevels[currentCard], atIndex: 0)
-        cardLevels[currentCard] = 8
+        cardLevels[currentCard] = wrongLevel
         
         let newIndex : Int = min(cardLevels[currentCard], numCards-1)
         cardIndices.insert(currentCard, atIndex: newIndex)
