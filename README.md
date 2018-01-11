@@ -1,4 +1,9 @@
-# ActiveRecall
+ActiveRecall
+============
+
+Status
+------
+This was a nicely working project. But since I wrote it Swift and the iOS libraries have moved on and bit rot has set in. This has convinced me not to bother with iOS programming ever again.
 
 FlashCard App for iOS
 
